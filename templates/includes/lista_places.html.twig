@@ -1,0 +1,60 @@
+	<table id="listaplaces" class="table table-striped table-bordered ">
+        <tr>
+            <th>ID</th>
+            <th>Imagen</th>
+            <th>Nombre</th>
+            <th>Ciudad</th>
+            <th>País</th>
+            <th>Continente</th>
+            <th>Tipo de lugar</th>
+            <th>Valoración</th>
+            <th>Operaciones</th>
+        </tr>
+        <tr>
+            {% for place in places %}
+           
+                <td>{{ place.id }}</td>
+                <td class="text-center">
+                    <a href="{{ path('place_show', {'id':place.id}) }}">
+                        <img class="lista-cover rounded"
+                        alt="Carátula de {{place.name}}"
+                        title="Carátula de {{place.name}}"
+                        src="{{asset(covers_directory~'/'~(place.caratula ?? 'default.jpg'))}}">
+                    </a>
+                <td><b>{{ place.name }}</b></td>
+                <td>{{ place.city }} min.</td>
+                <td>{{ place.country }}</td>
+                <td>{{ place.continent }}</td>
+                <td>{{ place.type }}</td>           
+                <td>
+                    {% if place.valoracion != NULL %} 
+                    	{%  for i in 1..5 %}
+                    		{%  if i<=place.valoracion %}
+                    			<img src="{{ asset('images/samples/estrellaon.gif')}}" alt="{{place.valoracion}}/5" title="{{place.valoracion}}/5" style="height: 25px; width: 25px;">
+            			     {% else %} 
+                    			<img src="{{ asset('images/samples/estrellaoff.gif')}}" alt="{{place.valoracion}}/5" title="{{place.valoracion}}/5" style="height: 25px; width: 25px;"> 
+                			{%  endif %}
+            			{%  endfor %}
+                    {% else %}                
+                        Sin valorar                
+                    {% endif %}   
+                </td>
+                <td>
+    				<a href="{{ path('place_show', {'id':place.id}) }}">
+                    	 <img height="20" width="20" src="{{ asset('images/buttons/show.png') }}" alt="Ver detalles" title="Ver detalles">
+                    </a>
+                    {%  if is_granted('update',place) %}
+                    <a href="{{ path('place_update', {'id':place.id}) }}">
+                    	<img height="20" width="20" src="{{ asset('/images/buttons/update.png') }}" title="Modificar" alt="Modificar">
+                	</a> 
+                	{% endif %}
+                	
+                    {%  if is_granted('delete',place) %}        
+                    <a href="{{ path('place_delete', {'id':place.id}) }}">
+                   		<img height="20" width="20" src="{{ asset('/images/buttons/delete.png') }}" title="Borrar" alt="Borrar">
+               		</a> 
+                	{% endif %}  
+    			</td> 
+        </tr>
+        {% endfor %}
+    </table>

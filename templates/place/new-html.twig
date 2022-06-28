@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+{% block title %}Nuevo lugar{% endblock %}
+{% block main %}
+
+    {{ parent() }}
+    
+    <p>Añadir un nuevo lugar en <b>SymfoFilms5.3</b>.</p>   
+    
+    
+     <div class="bg-light border row align-items-center justify-content-center my-3">
+    	<div class="col p-3 text-start">
+    		{{ form(formulario) }}
+    	</div>        		
+		<script src="{{ asset('/js/preview.js') }}"></script>
+		<figure class="col p-3 text-center bg-light">
+			<img src="{{ asset(covers_directory~'/'~(place.caratula ?? 'default.jpg')) }}" 
+    			class="rounded movie-cover preview" 
+    			alt="Carátula"
+    			title="Carátula">    		
+    	</figure>
+
+    	</div>    
+
+{% endblock %}

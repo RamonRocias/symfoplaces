@@ -19,6 +19,13 @@ class Comment
     #[ORM\Column(type: 'date', nullable: true)]
     private $date;
 
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'comments')]
+    private $user;
+
+    #[ORM\ManyToOne(targetEntity: Place::class, inversedBy: 'comments')]
+    #[ORM\JoinColumn(nullable: false)]
+    private $place;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -44,6 +51,30 @@ class Comment
     public function setDate(?\DateTimeInterface $date): self
     {
         $this->date = $date;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    public function getPlace(): ?Place
+    {
+        return $this->place;
+    }
+
+    public function setPlace(?Place $place): self
+    {
+        $this->place = $place;
 
         return $this;
     }

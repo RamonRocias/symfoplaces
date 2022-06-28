@@ -1,0 +1,74 @@
+{% extends 'base.html.twig' %}
+{% block title %}Actualización de  {{place.name}}{% endblock %}
+{% block main %}
+
+    {{ parent() }}
+    
+    <p>Edición del lugar <b>{{place.name}}</b>.</p>    
+    
+
+    <div class="bg-light border row align-items-center justify-content-center my-4">
+    	<div class="col p-3 text-start">
+    		{{ form(formulario) }}
+    	</div>        		
+		<script src="{{ asset('/js/preview.js') }}"></script>
+		<figure class="col p-3 text-center bg-light">
+			<img src="{{ asset(covers_directory~'/'~(place.caratula ?? 'default.jpg')) }}" 
+    			class="rounded movie-cover preview" 
+    			alt="Carátula de {{place.name}}"
+    			title="Carátula de {{place.name}}">
+
+    		{% if place.caratula %}
+        		<figcaption class="my-3 text-center">
+        			Borrar esta carátula
+        			<a href="{{path('place_delete_cover', {'id':place.id})}}" >
+        				<img src="{{asset('images/buttons/delete.png')}}" height="30" width="30"
+        					alt="Borrar carátula" title="Borrar carátula" class="boton">
+        			</a>
+        		</figcaption>
+    		{% endif %}
+    	</figure>
+    	{# Mensaje a mostrar al añadir photoss #}
+    	{%  for message in app.flashes('addPhotoError') %}
+    		<div class="alert alert-danger">
+    		    {{ message }}
+			</div>
+		{% endfor %}
+		
+    	<h3>Imágenes</h3>
+    	<ul class="list-group p-2 my-3">
+    		{% for photo in place.getPhotos() %}
+    			<li class="list-group-item p-2">
+    				<a class="align-middle" href="{{  path('photo_show', {'id':photo.id}) }}">
+    					{{ photo.title }}
+    				</a>
+    				<span class="align-middle">, {{ photo.title }}.</span>
+    				<a href="{{  path('place_remove_photo',
+    				    {'place': place.id, 'Imagen': photo.id}) }}">
+    					<img src="{{  asset('/images/buttons/delete.png') }}" 
+    					alt="quitar" height="25" width="25" class="m-2">  
+				    </a>
+				</li>
+			{% else %}
+				<li class="list-group-item warning">No se han indicado imágenes.</li>
+			{% endfor %}
+    	</ul>
+			{{ form_start(formularioAddPhoto) }}
+            <div class="d-flex flex-row justify-content-start align-items
+            border bg-light my-2">
+                <div class="px-2">
+               	    {{ form_label(formularioAddPhoto.photo) }}
+                </div>
+                <div class="px-2">
+                    {{ form_widget(formularioAddPhoto.photo) }}
+                </div>
+                <div class="p-2 mt-3">
+                    {{ form_row(formularioPhoto.photo) }}
+                </div>
+                    {{ form_rest(formularioAddPhoto) }}
+            </div>
+            {{ form_end(formularioAddPhoto) }}        		
+			
+			<script src="{{ asset('/js/preview.js') }}"></script>
+    	</div>
+{% endblock %}

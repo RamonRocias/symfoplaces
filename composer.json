@@ -23,7 +23,7 @@
         "symfony/mime": "5.3.*",
         "symfony/monolog-bundle": "^3.8",
         "symfony/proxy-manager-bridge": "5.3.*",
-        "symfony/runtime": "5.3.*",
+        "symfony/runtime": "*",
         "symfony/security-bundle": "5.3.*",
         "symfony/serializer": "5.3.*",
         "symfony/twig-bundle": "5.3.*",

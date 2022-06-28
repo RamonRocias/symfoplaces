@@ -1,0 +1,42 @@
+<table class="table table-striped table-bordered ">
+        <tr>
+            <th>ID</th>
+            <th>Imagen</th>
+            <th>Titulo</th>
+            <th>Descripción</th>
+            <th>Fecha</th>
+            <th>Operaciones</th>
+        </tr>
+        <tr>
+            {% for photo in photos %}
+           
+                <td>{{ photo.id }}</td>
+                <td class="text-center">
+                    <a href="{{ path('photo_show', {'id':photo.id}) }}">
+                        <img class="lista-cover rounded"
+                        alt="Retrato de {{photo.title}}"
+                        title="Retrato de {{photo.title}}"
+                        src="{{asset(portraits_directory~'/'~(photo.picture ?? 'default.jpg'))}}">
+                    </a>
+                <td><b>{{ photo.title }}</b></td>
+                <td>{{ photo.description }}</td>
+                <td>{{ photo.date |date('d/m/Y') }}</td>
+                <td>
+    				<a href="{{ path('photo_show', {'id':photo.id}) }}">
+                    	 <img height="20" width="20" src="{{ asset('images/buttons/show.png') }}" alt="Ver detalles" title="Ver detalles">
+                    </a>
+                    {%  if is_granted('update',photo) %}
+                    <a href="{{ path('photo_update', {'id':photo.id}) }}">
+                    	<img height="20" width="20" src="{{ asset('/images/buttons/update.png') }}" title="Modificar" alt="Modificar">
+                	</a> 
+                	{% endif %}
+                	
+                    {%  if is_granted('delete',photo) %}            
+                    <a href="{{ path('photo_delete', {'id':photo.id}) }}">
+                   		<img height="20" width="20" src="{{ asset('/images/buttons/delete.png') }}" title="Borrar" alt="Borrar">
+               		</a> 
+                	{% endif %}
+    			</td> 
+        </tr>
+        {% endfor %}
+    </table>

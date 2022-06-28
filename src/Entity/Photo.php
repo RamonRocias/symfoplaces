@@ -25,6 +25,10 @@ class Photo
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $picture;
 
+    #[ORM\ManyToOne(targetEntity: Place::class, inversedBy: 'photos')]
+    #[ORM\JoinColumn(nullable: false)]
+    private $place;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -74,6 +78,18 @@ class Photo
     public function setPicture(?string $picture): self
     {
         $this->picture = $picture;
+
+        return $this;
+    }
+
+    public function getPlace(): ?Place
+    {
+        return $this->place;
+    }
+
+    public function setPlace(?Place $place): self
+    {
+        $this->place = $place;
 
         return $this;
     }

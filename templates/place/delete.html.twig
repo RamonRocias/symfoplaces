@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+{% block title %}Borrado del lugar {{place.name}}{% endblock %}
+{% block main %}
+
+    {{ parent() }}
+    
+    <div class="bg-light border row align-items-center justify-content-center my-4">
+    	<div class="col p-3 text-center">
+    		<p>Borrado del lugar <b>{{place.name}</b>.</p>
+    		<p>Por favor, confirma la operacion de borrado mediante el formulario.</p>
+    		{{ form(formulario) }}
+    	</div>
+    	
+		<figure class="col p-3 text-center bg-light">
+			<img class="rounded border movie-cover" style="max-width: 220px"
+				alt="Carátula de {{plce.name}}"
+				title="Carátula de {{place.name}}"
+				src="{{asset(covers_directory~'/'~(place.caratula ?? 'default.jpg')) }}">
+		</figure>
+    </div>
+
+{% endblock %}

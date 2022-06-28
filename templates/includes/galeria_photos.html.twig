@@ -1,0 +1,16 @@
+<div style="display:flex; flex-wrap:wrap;">
+    {% for photo in photos %}
+    	<div class="text-center" style="flex:1; min-width:15vw; justify-content:left;"> 
+        	<figure>
+            	<p class="my-2">ID: {{ photo.id }}</p>
+                <a href="{{ path('photo_show', {'id':photo.id}) }}">
+                    <img class="lista-cover rounded"
+                    alt="Retrato de {{photo.title}}"
+                    title="Retrato de {{photo.title}}"
+                    src="{{asset(portraits_directory~'/'~(photo.picture ?? 'default.jpg'))}}">
+                </a>
+        		<figcaption class="my-2"><b>{{ photo.title }}</b></figcaption>
+            </figure>
+        </div>
+    {% endfor %}
+</div>

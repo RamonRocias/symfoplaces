@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\PlaceRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PlaceRepository::class)]
@@ -16,7 +18,7 @@ class Place
     #[ORM\Column(type: 'string', length: 255)]
     private $name;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $valoracion;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
@@ -37,6 +39,21 @@ class Place
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $caratula;
 
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'places')]
+    private $user;
+
+    #[ORM\OneToMany(mappedBy: 'place', targetEntity: Comment::class, orphanRemoval: true)]
+    private $comments;
+
+    #[ORM\OneToMany(mappedBy: 'place', targetEntity: Photo::class, orphanRemoval: true)]
+    private $photos;
+
+    public function __construct()
+    {
+        $this->comments = new ArrayCollection();
+        $this->photos = new ArrayCollection();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -54,12 +71,12 @@ class Place
         return $this;
     }
 
-    public function getValoracion(): ?string
+    public function getValoracion(): ?int
     {
         return $this->valoracion;
     }
 
-    public function setValoracion(?string $valoracion): self
+    public function setValoracion(?int $valoracion): self
     {
         $this->valoracion = $valoracion;
 
@@ -136,5 +153,82 @@ class Place
         $this->caratula = $caratula;
 
         return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Comment>
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    public function addComment(Comment $comment): self
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments[] = $comment;
+            $comment->setPlace($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(Comment $comment): self
+    {
+        if ($this->comments->removeElement($comment)) {
+            // set the owning side to null (unless already changed)
+            if ($comment->getPlace() === $this) {
+                $comment->setPlace(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Photo>
+     */
+    public function getPhotos(): Collection
+    {
+        return $this->photos;
+    }
+
+    public function addPhoto(Photo $photo): self
+    {
+        if (!$this->photos->contains($photo)) {
+            $this->photos[] = $photo;
+            $photo->setPlace($this);
+        }
+
+        return $this;
+    }
+
+    public function removePhoto(Photo $photo): self
+    {
+        if ($this->photos->removeElement($photo)) {
+            // set the owning side to null (unless already changed)
+            if ($photo->getPlace() === $this) {
+                $photo->setPlace(null);
+            }
+        }
+
+        return $this;
+    }
+    public function __toString(){
+        return  "ID: $this->id - $this->name ($this->city - $this->country - $this->continent),  $this->type.
+                
+                VALORACIÓN: ".($this->valoracion ?? 'Sin valorar')." sobre 5";
     }
 }

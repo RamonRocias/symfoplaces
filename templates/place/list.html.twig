@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Lugares disponibles en la aplicación{% endblock %}
+
+{% block main %}
+
+	{{ parent() }}
+	<p>Listado de lugares en <b>Symfoplaces</b>.</p>
+	
+	<h3>Lugares</h3>
+	
+	{# incluye la subvista en los enlaces de paginación antes de la tabla #}
+    {% 
+        include '/includes/paginator.html.twig' with
+            {
+                'route': 'place_list',
+                'entidades': 'places'
+            } 
+    %}
+	
+	{# incluye la subvista con los la lista de películas #}
+	{% include '/includes/lista_places.html.twig' %}
+            
+	{# incluye la subvista en los enlaces de paginación después de la tabla #}
+    {% 
+        include '/includes/paginator.html.twig' with
+            {
+                'route': 'place_list',
+                'entidades': 'places'
+            } 
+    %}
+{% endblock %}

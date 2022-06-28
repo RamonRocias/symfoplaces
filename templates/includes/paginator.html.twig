@@ -1,0 +1,48 @@
+{# subvista con los links de paginacién #}
+
+{# preparamos los valores para la información #}
+{% set paginaActual = paginator.getPaginaActual() %}
+{% set total = paginator.getTotal() %}
+
+{% set totalPaginas = paginator.getTotalPages() %}
+
+ 
+
+{% if totalPaginas > 1 %}
+<nav class="container row" aria-label="Paginación de resultados">
+
+	{# información sobre la paginación #}
+	<p Class="col-6">Pagina {{ paginaActual }} de {{ totalPaginas }},
+			hay <b>{{ total }}</b> {{ entidades }} en total.
+	</p>
+
+	{# enlaces de paginación #}
+	<ul class="col-md-6 col-sm-12 pagination justify-content-md-end justify-content-sm-center">
+		{# enlace atrás #}
+		{% if paginaActual > 1 %}
+			<li class="page-item">
+				<a class="page-link" href="{{ path(route, {pagina:1}) }}"> « </a>
+			</li>
+		{% endif %}
+		{# enlaces numerados #}
+		{% set inicial = paginaActual <= paginator_links ? 1 : paginaActual-paginator_links  %}
+		{% set final = paginaActual+paginator_links > totalPaginas ? totalPaginas : paginaActual+paginator_links %}
+		
+		{% for i in inicial..final %}
+
+			<li class="page-item {{ i == paginaActual ? 'active': ''}}">
+				<a class="page-link" href="{{ path(route, {pagina: i}) }}">{{ i }}</a>
+			</li>
+		{% endfor %}
+		{# enlace adelante #}
+		{% if paginaActual < totalPaginas %}
+			<li class="page-item">
+				<a class="page-link" 
+					href="{{ path(route, {pagina: totalPaginas })}}"> » </a>
+			</li>
+		{% endif %}
+	</ul>
+</nav>
+
+{% endif %}
+		

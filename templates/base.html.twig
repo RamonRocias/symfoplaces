@@ -1,19 +1,145 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        {# Run `composer require symfony/webpack-encore-bundle`
-           and uncomment the following Encore helpers to start using Symfony UX #}
-        {% block stylesheets %}
-            {#{{ encore_entry_link_tags('app') }}#}
-        {% endblock %}
+<html lang="es">
 
-        {% block javascripts %}
-            {#{{ encore_entry_script_tags('app') }}#}
-        {% endblock %}
+    <head> 	
+	<script src="/js/bootstrap.bundle.js"></script>
+    {% block head %}
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        
+        <title>{% block title %}{% endblock %} - Symfoplaces</title>
+        <link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap.min.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ asset('css/estilo.css') }}">
+        <link rel="shortcut icon" href="{{ asset('images/template/logo.png') }} type="image/png">
+         {% endblock %}
     </head>
-    <body>
-        {% block body %}{% endblock %}
+    <body class="continer p-3">
+        {% block login %}
+        	{% if is_granted("IS_AUTHENTICATED_FULLY") %}
+        
+        		<div class="my-1 text-end">
+        			<a href="{{ path('app_home') }}">
+        				{{ app.user.displayname }}
+        				<span style="font-size: 0.8em"> ({{ app.user.email }})</span>
+        			</a>
+        				-
+        			<a href="{{ path('app_logout') }}">Logout</a>
+        		</div>
+        	{% else %}
+        		<div class="my-1 text-end">
+        			<a style="vertical-align:middle" href="{{ path('app_login') }}">
+        				LogIn
+        				<img src="{{ asset('images/buttons/login.png') }}"
+        					alt="login" height="25" width="25">
+        			</a>
+        			<span>/</span>
+        			<a style="vertical-align:middle" href="{{ path('app_register') }}">
+        				Registro
+        				<img src="{{ asset('images/buttons/register.png') }}"
+        					alt="register" height="25" width="25">
+        			</a>        			
+        		</div>
+        	{% endif %}
+        {% endblock %}
+    	{% block header %}
+    	<header class="row border bg-light">
+    		<hgroup class="col-8">
+    			<h1>Symfoplaces</h1>
+    			<h2>Página de lugares que es mejor no acercarse. Ejemplo de clase.</h2>
+    		</hgroup>
+    		<figure class="col-4 text-end">
+    			<a href="{{ path('app_portada') }}"> 
+    			<!-- En Default controller tenemos  #[Route('/', name: 'app_portada')] 
+    			para el método index(). Que nos redirige a la portada-->
+    				<img class="h-auto" alt="logo" src="{{ asset('/images/template/logo.png')}}">
+				</a>
+    		</figure>
+    		 <p style="font-style:italic">"{{ movieQuoteService.random() }}"</p>
+    	</header>
+        {% endblock %}
+        {% block nav %}
+         <div class="container row">
+       		<nav class="col-9 navbar navbar-expand-lg">
+              <div class="container-fluid">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                  <ul class="navbar-nav me-auto mb-2 mb-lg-0 ">
+                    <li class="nav-item" style="min-width:10vw">
+                      <a class="nav-link active" aria-current="page"  href="{{ path('app_portada') }}">Inicio</a>                       
+                    </li>
+                    <li class="nav-item dropdown" style="min-width:15vw">
+                      <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Películas
+                      </a>
+                      <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="{{ path('place_list', ) }}">Ver lugares</a></li>
+                        <li><a class="dropdown-item" href="{{ path('place_search', ) }}">Buscar lugares</a></li>
+                        <!-- <li><hr class="dropdown-divider"></li>  -->
+                        {% if is_granted('create', entityFaker.getMock('Place')) %}
+                        <li><a class="dropdown-item" href="{{ path('place_create', ) }}">Añadir lugar</a></li>
+                        {% endif %}
+                      </ul>
+                    </li>
+                    <li class="nav-item dropdown" style="min-width:15vw">
+                      <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Imágenes
+                      </a>
+                      <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="{{ path('photo_list', ) }}">Ver imágenes</a></li>
+                        <li><a class="dropdown-item" href="{{ path('photo_search', ) }}">Buscar imágenes</a></li>
+                        <!-- <li><hr class="dropdown-divider"></li>  -->
+                        {% if is_granted('create', entityFaker.getMock('Photo')) %}
+                        <li><a class="dropdown-item" href="{{ path('photo_create', ) }}">Añadir imágenes</a></li>
+                        {% endif %}
+                      </ul>
+                    <li class="nav-item" style="min-width:10vw">
+                      <a class="nav-link active" aria-current="page"  href="{{ path('contacto') }}">Contacto</a>                       
+                    </li>
+                    {% if is_granted('show', entityFaker.getMock('User')) %}
+                        <li class="nav-item dropdown" style="min-width:15vw">
+                          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Usuarios
+                          </a>
+                          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="{{ path('user_list', ) }}">Ver usuarios</a></li>
+                            <li><a class="dropdown-item" href="{{ path('user_search', ) }}">Buscar usuarios</a></li>
+                            <!-- <li><hr class="dropdown-divider"></li>  -->
+                            {% if is_granted('update', entityFaker.getMock('User')) %}
+                            	<li><a class="dropdown-item" href="{{ path('app_register', ) }}">Crear usuario</a></li>
+                            {% endif %}
+                          </ul>                   
+                        </li>
+                     {% endif %}
+                  </ul>
+                </div>
+              </div>
+            </nav>
+        	<div class="col-3 pt-2 text-end">
+        		{{  "now"|date('d/m/Y H:i', timezone="Europe/Madrid") }}
+        	</div>
+    	</div>  
+        {% endblock %}
+        
+    		<main class="my-3">
+            {% block main %}            
+                {% block success %}
+                    {% for message in app.flashes('success') %} 
+                        <div class="alert alert-success">
+                            {{ message }}
+                        </div>                    
+                    {% endfor %}                    
+                {% endblock %}
+            {% endblock %}
+            </main>
+            
+            {% block footer %}            
+            <footer class="page-footer font-small p-4 bg-Light border row">
+                <p>Aplicación creada por <b>Ramón Rocias</b> como ejercicio de evaluación continua
+                 del curso de SYMFONY en el CIFO La Violeta, durante los meses de Mayo y Junio de 2022.</p>
+                <p>Aplicación desarrollada haciendo uso de <b>Symfony 5.3</b> y <b>Bootstrap</b>.</p>           
+            </footer>            
+            {% endblock %}        
     </body>
 </html>

@@ -1,0 +1,74 @@
+{% extends 'base.html.twig' %}
+{% block title %}Detalles de {{ place.name }} {% endblock %}
+{% block main %}
+
+{{ parent() }}
+
+    <h2>{{ place.name }}</h2>
+    <p>Detalles del lugar {{ place.name }},
+    	en {{ place.city }}({{ place.country }} - {{ place.continent }}) en <b>Symfoplaces</b>.</p>
+    
+    
+   
+	<div class="bg-light border my-4 row align-items-center justify-content-center">
+		<div class="col p-3 text-start">
+			<p><b>ID</b>: {{ place.id }}</p>
+            <p><b>Nombre</b>: {{ place.name }}</p>
+            <p><b>Ciudad:</b>: {{ place.city ?? 'Sin datos' }}</p>
+            <p><b>País:</b>: {{ place.country ?? 'Sin datos' }}</p>
+            <p><b>Continente:</b>: {{ place.continent ?? 'Sin datos' }}</p>
+            <p><b>Valoración</b>
+                {% if place.valoracion != NULL %} 
+                	{%  for i in 1..5 %}
+                		{%  if i<=place.valoracion %}
+                			<img class="estrella" src="{{ asset('images/samples/estrellaon.gif')}}" alt="{{place.valoracion}}/5" title="{{place.valoracion}}/5" style="height: 25px; width: 25px;">
+        			     {% else %} 
+                			<img class="estrella" src="{{ asset('images/samples/estrellaoff.gif')}}" alt="{{place.valoracion}}/5" title="{{place.valoracion}}/5" style="height: 25px; width: 25px;"> 
+            			{%  endif %}
+        			{%  endfor %}
+                {% else %}                
+                    Sin valorar                
+                {% endif %}   
+           </p>
+            {% if place.descripcion %}                
+                	<p><b>Descripcion:</b></p>
+                	<p>{{ place.descripcion }}</p>                
+            {% endif %} 
+            {% if place.getUser() %}
+            	<p>Información aportada por: <i>{{ place.getUser().displayname }}</i> </p>
+        	{% endif %}	
+		</div>
+		<figure class="col m-3 p-3 text-center bg-light">
+			<img class="rounded movie-cover" style="max-width: 240px"
+				alt=" Carátula de {{ place.name }}"
+				title="Carátula de {{ place.name }}"
+				src="{{ asset(covers_directory~'/'~(place.caratula ?? 'default.jpg')) }}">
+		</figure>
+		
+		{% if place.getPhotos()|length>0 %}
+			<h2>Imágenes del lugarr</h2>
+			{# Incluye la subvista con la lista de imágenes #}
+			{% set photos = place.getPhotos() %}
+			{% include '/includes/galeria_photos.html.twig' %}
+		{% endif %}
+	</div>        
+   
+    
+    <div class="text-center">
+    	
+        <a href="{{ path( 'place_list') }}">
+        <img height="40" width="40" src="{{ asset('images/buttons/list.png') }}"
+        alt="Lista" title="Volver al Listado"></a>
+        
+        <a href="{{ path( 'place_update', {'id':place.id}) }}">
+        <img height="40" width="40" src="{{ asset('images/buttons/update.png') }}"
+        alt="Modificar" title="Modificar" ></a>
+        
+        <a href="{{ path( 'place_delete', {'id':place.id}) }}">
+        <img height="40" width="40" src="{{ asset('images/buttons/delete.png') }}"
+        alt="Borrar" title="Borrar" ></a>    
+    </div>
+    
+    
+    
+    {% endblock %}

@@ -1,0 +1,16 @@
+<div style="display:flex; flex-wrap:wrap;">	
+    {% for place in places %}
+    	<div class="text-center" style="flex:1; min-width:15vw; justify-content:left;"> 
+        	<figure>
+            	<p class="my-2">ID: {{ place.id }}</p>
+                <a href="{{ path('place_show', {'id':place.id}) }}">
+                    <img class="lista-cover rounded"
+                    alt="Carátula de {{place.name}}"
+                    title="Carátula de {{place.name}}"
+                    src="{{asset(covers_directory~'/'~(place.caratula ?? 'default.jpg'))}}">
+                </a>
+        		<figcaption class="my-2"><b>{{ place.name }}</b></figcaption>
+            </figure>
+        </div>
+    {% endfor %}
+</div>

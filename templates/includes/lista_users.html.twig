@@ -1,0 +1,53 @@
+	<table id="listausers" class="table table-striped table-bordered ">
+        <tr>
+            <th>ID</th>
+            <th>FOTO</th>
+            <th>EMAIL</th>
+            <th>ROLES</th>
+            <th>ALIAS</th>
+            <th>Operaciones</th>
+        </tr>
+        <tr>
+            {% for user in users %}
+           
+                <td>{{ user.id }}</td>
+                <td class="text-center">
+                    <a href="{{ path('user_show', {'id':user.id}) }}">
+                        <img class="rounded border movie-cover" style="max-width: 80px"
+                	alt="Foto de {{ user.displayname }}"
+                	title="Foto de {{ user.displayname }}"
+                	src="{{ user.fotografia?
+                        path('pic_show', {'fotografia':user.fotografia}) 
+                            :
+                        path('pic_show', {'fotografia':'default.jpg'})
+            	    }}">
+                    </a>
+                <td><b>{{ user.email }}</b></td>
+               
+                <td>
+                    {% for roles in user.roles %}
+               			<p>{{ roles }}</p>
+               	    {% endfor %}
+           	    </td>
+           	    
+                <td>{{ user.displayname }}</td>      
+                
+                <td>
+    				<a href="{{ path('user_show', {'id':user.id}) }}">
+                    	 <img height="20" width="20" src="{{ asset('images/buttons/show.png') }}" alt="Ver detalles" title="Ver detalles">
+                    </a>
+                    {%  if is_granted('update',user) %}
+                    <a href="{{ path('user_update', {'id':user.id}) }}">
+                    	<img height="20" width="20" src="{{ asset('/images/buttons/update.png') }}" title="Modificar" alt="Modificar">
+                	</a> 
+                	{% endif %}
+                	
+                    {%  if is_granted('update',user) %}        
+                    <a href="{{ path('user_delete', {'id':user.id}) }}">
+                   		<img height="20" width="20" src="{{ asset('/images/buttons/delete.png') }}" title="Borrar" alt="Borrar">
+               		</a> 
+                	{% endif %} 
+    			</td> 
+        </tr>
+        {% endfor %}
+    </table>
