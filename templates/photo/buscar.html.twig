@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Lista de fotos de lugares{% endblock %}
+
+{% block main %}
+
+	{{ parent() }}
+	<p>Búsqueda de inágenes en <b>Symfoplaces</b>.</p>
+	
+	<p>
+		Indica los criteros de búsqueda en el formulario y presiona el botón <i>Buscar</i>.
+		Para mostrar un listado completo, introduce el caracter % en el campo <i>Valor</i>.
+	</p>
+	<div class="bg-light border row align-items-center justify-content-center my-3 p-1">
+    {{ form_start(formulario) }}
+        <div class="row">
+            <div class="col">{{ form_row(formulario.valor) }}</div>
+            <div class="col">{{ form_row(formulario.campo) }}</div>
+            <div class="col">{{ form_row(formulario.orden) }}</div>
+            <div class="col">{{ form_row(formulario.sentido) }}</div>
+            <div class="col">{{ form_row(formulario.limite) }}</div>
+            <div class="col">{{ form_row(formulario.Buscar) }}</div>
+        {{ form_rest(formulario) }}
+        </div>
+    {{ form_end(formulario) }}
+    </div>
+    
+    <h3>Resultados</h3>
+	
+	{# incluye la subvista con los la lista de photos #}
+	{% include '/includes/lista_photos.html.twig' %}
+            
+	<div class="text-center">
+		<a href="{{ path('place_list') }}">
+			<img height="40 width="40"
+				src="{{ asset('images/buttons/list.png') }}"
+				alt="Lista"
+				title="Volver al listado de lugares">
+		</a>
+	</div>
+{% endblock %}

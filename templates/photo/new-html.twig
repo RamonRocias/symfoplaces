@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+{% block title %}Nueva imagen{% endblock %}
+{% block main %}
+
+    {{ parent() }}
+    
+    <p>Añade una nueva imagen en <b>Symfoplaces</b>.</p>    
+   
+    
+     <div class="bg-light border row align-items-center justify-content-center my-4">
+    	<div class="col p-3 text-start">
+    		{{ form(formulario) }}
+    	</div>        		
+		<script src="{{ asset('/js/preview.js') }}"></script>
+		<figure class="col p-3 text-center bg-light">
+			<img src="{{ asset(portraits_directory~'/'~(photo.picture ?? 'default.jpg')) }}" 
+    			class="rounded movie-cover preview" 
+    			alt="Retrato"
+    			title="Retrato">    		
+    	</figure>
+
+	</div>
+
+{% endblock %}

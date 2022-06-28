@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\PhotoRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PhotoRepository::class)]
@@ -92,5 +94,9 @@ class Photo
         $this->place = $place;
 
         return $this;
+    }
+    public function __toString(){
+        return  "ID: $this->id - Imagen $this->title de $this->getPlace(), añadida el" .$this->date->format('d/m/Y').".";
+        ;
     }
 }

@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Lista de comentarios{% endblock %}
+
+{% block main %}
+
+	{{ parent() }}
+	<p>Listado de comentarios en <b>Symfoplaces</b>.</p>
+	
+	<h3>Imágenes</h3>
+	
+    {# incluye la subvista en los enlaces de paginación antes de la tabla #}
+    {% 
+        include '/includes/paginator.html.twig' with
+            {
+                'route': 'comment_list',
+                'entidades': 'comments'
+            } 
+    %}
+	
+	{# incluye la subvista con los la lista de actores #}
+	{% include '/includes/lista_comments.html.twig' %}
+    
+    {# incluye la subvista en los enlaces de paginación después de la tabla#}    
+    {% 
+        include '/includes/paginator.html.twig' with
+            {
+                'route': 'comment_list',
+                'entidades': 'comments'
+            } 
+    %}
+{% endblock %}

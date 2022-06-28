@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+{% block title %}Detalles del comentario {{ comment.id }} {% endblock %}
+{% block main %}
+
+{{ parent() }}
+
+    <h2>Detalles del comentario añadido a <b>Symfoplaces</b> el {{ comment.date }} </h2>
+    <p> {{ comment.text }}</p>    
+    
+	<div class="bg-light border my-4 row align-items-center justify-content-center my-3">		
+		
+		{% if comment.getPlace()|length>0 %}
+			<h2>Este comentario pertenece a:</h2>
+			{# Incluye la subvista con la lista de lugares #}
+			{% set place = photo.getPlace() %}
+			{% include '/includes/galeria_places.html.twig' %}
+		{% endif %}
+	</div>       
+   
+
+    <div class="text-center">
+        <a href="{{ path( 'comment_list') }}">
+        <img height="40" width="40" src="{{ asset('images/buttons/list.png') }}"
+        alt="Lista" title="Volver al Listado"></a>
+        
+        <a href="{{ path( 'comment_delete', {'id':actor.id}) }}">
+        <img height="40" width="40" src="{{ asset('images/buttons/delete.png') }}"
+        alt="Borrar" title="Borrar" ></a>    
+    </div>
+    
+    {% endblock %}

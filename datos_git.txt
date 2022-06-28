@@ -1,3 +1,10 @@
 https://github.com/RamonRocias/symfoplaces
 
 https://github.com/RamonRocias/symfoplaces.git
+
+IMP15, p22 y IMP16, p1 y p23
+Para crear el token, tenemos que ir a: settings – developer settings
+– personal access tokens – generate new token.
+
+Token para symfoplaces
+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

@@ -62,7 +62,7 @@ class PlaceController extends AbstractController
         
         // Le pedimos que nos recupere todas las places con paginación
         $places = $paginator->findAllEntities($pagina);
-        $paginator->setLimit($this->getParameter('app.movie_results'));
+        $paginator->setLimit($this->getParameter('app.place_results'));
         
         //retorna la respuesta. Normalmente será una vista
         return $this->renderForm("place/list.html.twig",
@@ -98,7 +98,7 @@ class PlaceController extends AbstractController
                     $fileService->setTargetDirectory($this->getParameter('app.covers.root'));
                     
                     // sube el fichero al directorio y guarda su nombre en la entidad
-                    $place->setCaratula($fileService->upload($uploadedFile, true, 'cover_'));
+                    $place->setCaratula($fileService->upload($uploadedFile, true, 'cover_place__'));
                     
                     // establece el creador de la nueva place
                     $place->setUser($this->getUser());

@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+{% block title %}Detalles de la imagen {{ photo.title }} {% endblock %}
+{% block main %}
+
+{{ parent() }}
+
+    <h2>{{ photo.title }}</h2>
+    <p>Detalles de la imágen {{ photo.title }},
+    	añadida el {{ photo.date }} a <b>Symfoplaces</b>.</p>
+    
+    
+	<div class="bg-light border my-4 row align-items-center justify-content-center my-3">
+		<div class="col p-3 text-start">
+			<p><b>ID</b>: {{ actor.id }}</p>
+    		<p><b>Título</b>: {{ photo.title }}</p>
+   			<p><b>Añadida el</b>: {{ photo.date |date('d/m/Y')}} </p>
+            {% if photo.description %}                    
+                	<h2>Descripción de la imagen:</h2>
+                	<p>{{ photo.description }}                	
+            {% endif %}
+        </div> 
+		<figure class="col m-3 p-3 text-center bg-light">
+			<img class="rounded border movie-cover" style="max-width: 240px"
+				alt="Retrato de {{ photo.title }}"
+				title="Retrato de {{ photo.title }}"
+				src="{{ asset(portraits_directory~'/'~(photo.picture ?? 'default.jpg')) }}">
+		</figure>
+		
+		{% if photo.getPlace()|length>0 %}
+			<h2>Esta imagen pertenece a:</h2>
+			{# Incluye la subvista con la lista de lugares #}
+			{% set place = photo.getPlace() %}
+			{% include '/includes/galeria_places.html.twig' %}
+		{% endif %}
+	</div>       
+   
+
+    <div class="text-center">
+        <a href="{{ path( 'photo_list') }}">
+        <img height="40" width="40" src="{{ asset('images/buttons/list.png') }}"
+        alt="Lista" title="Volver al Listado"></a>
+        
+        <a href="{{ path( 'photo_delete', {'id':actor.id}) }}">
+        <img height="40" width="40" src="{{ asset('images/buttons/delete.png') }}"
+        alt="Borrar" title="Borrar" ></a>    
+    </div>
+    
+    {% endblock %}

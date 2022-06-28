@@ -1,0 +1,27 @@
+<table class="table table-striped table-bordered ">
+        <tr>
+            <th>ID</th>
+            <th>Comentario</th>
+            <th>Fecha</th>
+            <th>Operaciones</th>
+        </tr>
+        <tr>
+            {% for comment in comments %}
+           
+                <td>{{ comment.id }}</td>
+                <td>{{ comment.text }}</td>
+                <td>{{ comment.date |date('d/m/Y') }}</td>
+                <td>
+    				<a href="{{ path('comment_show', {'id':comment.id}) }}">
+                    	 <img height="20" width="20" src="{{ asset('images/buttons/show.png') }}" alt="Ver detalles" title="Ver detalles">
+                    </a>
+                	
+                    {%  if is_granted('delete',comment) %}            
+                    <a href="{{ path('comment_delete', {'id':comment.id}) }}">
+                   		<img height="20" width="20" src="{{ asset('/images/buttons/delete.png') }}" title="Borrar" alt="Borrar">
+               		</a> 
+                	{% endif %}
+    			</td> 
+        </tr>
+        {% endfor %}
+    </table>

@@ -7,6 +7,7 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * @extends ServiceEntityRepository<Place>
@@ -75,4 +76,45 @@ class PlaceRepository extends ServiceEntityRepository
         ;
     }
     */
+/*    //recupera por duración de la película
+    public function findAllByduration(int $min, int $max):array{
+        //consukta den DQL ( Doctrine Query Language)
+        return $this->getEntityManager()->createQuery(
+            "select p from App\Entity\Pelicula p
+                where p.duracion between :min and :max
+                order by p.duracion desc"
+            )
+            ->setParameter("min",$min)
+            ->setParameter("max",$max)
+            ->getResult();
+    }
+*/
+    // Ejemplo hecho por mi
+    // muestra los últimos 4 lugares , con carátula, que se han añadido
+    public function placeShow():array
+    {
+        $places = $this->getEntityManager()->createQuery(
+            'SELECT p
+             FROM App\Entity\Place p
+            WHERE p.caratula IS NOT NULL
+             ORDER BY p.id DESC'
+            )->setMaxResults(4)  //limit
+            ->setFirstResult(0) //offset
+            ->getResult();
+            //$respuesta = implode('<br>', $peliculas);
+            return  $places;
+    }
+    
+    // Método que hay que llamar desde la portada para que muestre las últimas carátulas
+    // Se llama desde DefaultControlller.
+    // Ejemplo de clase.
+    
+    public function findLast(int $quantity=4,bool $cover=TRUE) :array {
+        return $this->getEntityManager()->createQuery(
+            "SELECT p FROM App\Entity\Place p"
+            .($cover? " WHERE p.caratula IS NOT NULL":"")
+            ." ORDER BY p.id DESC"
+            )
+            ->setMaxResults($quantity)->getResult();
+    }
 }

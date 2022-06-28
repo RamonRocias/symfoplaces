@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+{% block title %}Borrado del comentario: {{comment.id}}{% endblock %}
+{% block main %}
+
+    {{ parent() }}
+    
+    <div class="bg-light border row align-items-center justify-content-center my-4">
+    	<div class="col p-3 text-center">
+    		<p>Borrado del comentario: </p>
+    		<p>{{comment.text}}</p>
+    		<p>Por favor, confirma la operacion de borrado mediante el formulario.</p>
+    		{{ form(formulario) }}
+    	</div> 	
+    </div>
+
+{% endblock %}

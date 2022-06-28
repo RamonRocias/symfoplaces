@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+{% block title %}Nuevo comentario{% endblock %}
+{% block main %}
+
+    {{ parent() }}
+    
+    <p>Añade un nuevo comentario en <b>Symfoplaces</b>.</p>    
+   
+    
+     <div class="bg-light border row align-items-center justify-content-center my-4">
+    	<div class="col p-3 text-start">
+    		{{ form(formulario) }}
+    	</div> 
+	</div>
+
+{% endblock %}

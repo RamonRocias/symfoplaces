@@ -24,7 +24,8 @@ parameters:
     # número de resultados por página para la paginación
     app.page_results: 10
     app.place_results: 6
-    app.photo_results: 4
+    app.photo_results: 12
+    app.comment_results: 10
     app.user_results: 6
     
     # conficuraión del número de enlaces del paginador

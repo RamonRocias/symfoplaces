@@ -10,6 +10,19 @@ use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
+use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
+use Doctrine\ORM\NonUniqueResultException;
+// use App\Security\LoginFormAuthenticator;
+// use App\Controller\FileService;
+
+
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+
+use App\Form\UserFormType;
+use App\Form\UserDeleteFormType;
 
 /**
  * @extends ServiceEntityRepository<User>
@@ -25,6 +38,29 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     {
         parent::__construct($registry, User::class);
     }
+    
+    public function loadUserByIdentifier(string $text): ?User{
+        try {
+            $resultado = $this->getEntityManager()->createQuery(
+                'SELECT u
+                    FROM App\Entity\User u
+                    WHERE u.email = :valor
+                    OR u.telefono = :valor'
+                )
+                ->setParameter('valor', $text)
+                ->getOneOrNullResult();
+                // Con esta excepción evitaremos problemas de múltiples resultados
+        } catch (NonUniqueResultException $e) {
+            return NULL;
+        }
+        
+        return $resultado;
+    }
+    
+    /** @Obsoleto desde Symfony 5.3 pero se ha de añadir */
+    public function loadUserByUsername(string $usernameOrEmail): ?User{
+        return $this->loadUserByIdentifier($usernameOrEmail);
+    } 
 
     /**
      * @throws ORMException
