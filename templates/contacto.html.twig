@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+{% block title %}Contacto{% endblock %}
+{% block main %}
+{{ parent() }}
+<p>Contacta  con <b>Symfoplaces</b>.</p>
+    <div Class="bg-light border row align-items-center justify-content-center my-3 p-2">    
+    	<div class="col-6 p-2">
+    		<h3>Contactar:</h3>
+			{{ form(formulario) }}
+    	</div>
+    	<div class="col-6 p-2 text-end">
+    		<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2992.0339504563394!2d2.130873115603673!3d41.41678167926147!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x12a4981b5fdca4b1%3A0x35e8d1d280af19bd!2sCIFO%20Barcelona%20-%20La%20Violeta!5e0!3m2!1sen!2ses!4v1653947010317!5m2!1sen!2ses" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+    			style="border:0; width:100%; min-height:350px"
+    			allowfullscreen loading="lazy">
+    		</iframe>
+    
+    		<p><b>CIFO Barcelona la Violeta</b></p>
+    		<p>Carrer del Conte de Sert, 7, 08035 Barcelona</p>
+    		<p>Aula I12 (Cuns de Symfony)</p>
+    		<p>Teléfono: 932 54 17 O0</p>
+    	</div>
+    </div>
+{% endblock%}

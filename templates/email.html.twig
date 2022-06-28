@@ -1,0 +1,28 @@
+{% apply inline_css(
+	source('@styles/bootstrap.min.css'),
+	source('@styles/estilo.css')
+    ) %}
+	{% block header %}
+    	<header class="row border bg-light m-3">
+    		<div class="col-9 p-2">
+    			<hgroup>
+    				<h2>Symfoplaces</h2>
+    				<h3>Página de viajes con lugares que no deberías visitar. ejemplo de clase.</h3>
+    			</hgroup>
+    		</div>
+    		<div class="col-3 p-2">
+    			<img style="width:100%;" alt="logo" src="{{ email.image('@images/template/transparent.png') }}">
+    		</div>
+    	</header>
+    {% endblock %}
+    <main>
+    	{% block main %}{% endblock %}
+    </main>
+    {% block footer %}           
+            <footer class="page-footer p-2 m-2 bg-light border" style="font-size: 0.8rem;">
+                <p>Aplicación creada por <b>Ramón Rocias</b> como ejercicio de evaluación continua
+                 del curso de SYMFONY en el CIFO La Violeta, durante los meses de Mayo y Junio de 2022.</p>
+                <p>Aplicación desarrollada haciendo uso de <b>Symfony 5.3</b> y <b>Bootstrap</b>.</p>           
+            </footer>
+    {%  endblock %}
+{%  endapply %}

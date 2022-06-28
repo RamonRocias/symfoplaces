@@ -1,5 +1,37 @@
 twig:
     default_path: '%kernel.project_dir%/templates'
+    
+    paths:
+        # point this wherever your css files live
+        '%kernel.project_dir%/public/css': styles
+        
+        # point this wherever your images live
+        '%kernel.project_dir%/public/images' : images
+        
+    # integra bootstra_5 para los formularios
+    form_themes: ['bootstrap_5_layout.html.twig', 'widgets/data_list.html.twig']
+    
+    # variables globales
+    globals:
+        # directorio de las caratulas
+        covers_directory: '%app.covers%'
+        # directorio de los retratos
+        # portraits_directory: '%app.portraits%'
+        # directorios de los retratos de los usuarios
+        users_directory: '%app.users_pics%'
+        
+        # numero de enlaces arriba y abajo del paginator
+        paginator_links: '%app.paginator_links%' 
+        
+        # variable global compartida para todas las vistas
+        # el valor indicado es el del id del servicio
+        # frase: '@App\Service\FrasesService'
+        placeQuoteService: '@App\Service\PlaceQuoteService'
+        
+        # variable global compartida para todas las vistas
+        # el valor indicado es el id del servicio
+        # ha quedado obosleto. frase: '@App\Service\FrasesService'
+        entityFaker: '@App\Service\EntityFakerService'
 
 when@test:
     twig:

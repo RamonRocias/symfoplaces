@@ -1,7 +1,29 @@
 monolog:
     channels:
         - deprecation # Deprecations are logged in the dedicated "deprecation" channel when it exists
-
+        - app_info
+        - app_user_info  
+    handlers:
+        appinfo:
+            type: stream
+            path: "%kernel.logs_dir%/appinfo.log"
+            level: debug
+            channels: ['app_info']
+            buffer_size: 500
+        appuserinfo:
+            type: stream
+            path: "%kernel.logs_dir%/appuserinfo.log"
+            level: debug
+            channels: ['app_user_info']
+            buffer_size: 500
+        symfony_mailer:
+            type: symfony_mailer
+            from_email: 'admin@symfoplaces.com'
+            to_email: '%app.admin_email%'
+            channels: ["app_info","app_user_info"]
+            subject: 'Symfoplaces: %%message%%'
+            formatter: monolog.formatter.html
+            content_type: text/html          
 when@dev:
     monolog:
         handlers:
@@ -9,7 +31,7 @@ when@dev:
                 type: stream
                 path: "%kernel.logs_dir%/%kernel.environment%.log"
                 level: debug
-                channels: ["!event"]
+                channels: ["!event","!app_info","!app_user_info"]
             # uncomment to get logging in your browser
             # you may have to allow bigger header sizes in your Web server configuration
             #firephp:
@@ -22,20 +44,6 @@ when@dev:
                 type: console
                 process_psr_3_messages: false
                 channels: ["!event", "!doctrine", "!console"]
-
-when@test:
-    monolog:
-        handlers:
-            main:
-                type: fingers_crossed
-                action_level: error
-                handler: nested
-                excluded_http_codes: [404, 405]
-                channels: ["!event"]
-            nested:
-                type: stream
-                path: "%kernel.logs_dir%/%kernel.environment%.log"
-                level: debug
 
 when@prod:
     monolog:
