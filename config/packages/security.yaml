@@ -1,4 +1,9 @@
 security:
+    role_hierarchy:
+        ROLE_EDITOR: ROLE_USER
+        ROLE_SUPERVISOR: ROLE_USER
+        ROLE_ADMIN: [ROLE_EDITOR, ROLE_SUPERVISOR]
+        
     enable_authenticator_manager: true
     # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
     password_hashers:
@@ -20,6 +25,23 @@ security:
         main:
             lazy: true
             provider: app_user_provider
+            custom_authenticator: App\Security\LoginFormAuthenticator
+            form_login:
+                enable_csrf: true
+                login_path: app_login
+                check_path: app_login
+            logout:
+                path: app_logout
+                # redirección tras logout
+                target: app_portada
+            entry_point: form_login
+            remember_me:
+                secret: '%kernel.secret%'
+                lifetime: 604800 # una semana, en segundos
+                path: /    # válido para todo el sitio
+                # where to redirect after logout
+                # target: app_any_route
+            # custom_authenticator: App\Security\LoginFormAuthenticator
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
@@ -32,6 +54,12 @@ security:
     access_control:
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
+    # config/packages/security.yaml
+    
+  
+    access_decision_manager:
+        strategy: unanimous
+        allow_if_all_abstain: false
 
 when@test:
     security:

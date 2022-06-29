@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+{% block title %}Edición del usuario {{user.email}}{% endblock %}
+{% block main %}
+
+    {{ parent() }}
+    
+    <p>Edición del usuario <b>{{user.email}}</b>.</p>
+    
+    <p>A lo largo de las préximas semanas iremos editando este ejemplo para
+    	dotarlo de nuevas características y funcionalidades.</p>
+
+    <div class="bg-light border row align-items-center justify-content-center my-4">
+    	<div class="col p-3 text-start">
+    		{{ form(formulario) }}
+    	</div>        		
+		<script src="{{ asset('/js/preview.js') }}"></script>
+		<figure class="col p-3 text-center bg-light">
+			<img class="rounded border movie-cover" style="max-width: 240px"
+                	alt="Foto de {{ user.displayname }}"
+                	title="Foto de {{ user.displayname }}"
+                	src="{{ user.fotografia?
+                        path('pic_show', {'fotografia':user.fotografia}) 
+                            :
+                        path('pic_show', {'fotografia':'default.jpg'})
+            	    }}">
+
+    		
+    	</figure>
+    	{# Mensaje a mostrar al añadir películas #}
+    	{%  for message in app.flashes('addPelicualError') %}
+    		<div class="alert alert-danger">
+    		    {{ message }}
+			</div>
+		{% endfor %}        		
+			
+			<script src="{{ asset('/js/preview.js') }}"></script>
+    	</div>
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Lista de usuarios{% endblock %}
+
+{% block main %}
+
+	{{ parent() }}
+	<p>Listado de usuarios registrados en<b>Symfofilms</b>.</p>
+	
+	<h3>Usuarios</h3>
+	
+	{# incluye la subvista en los enlaces de paginación antes de la tabla #}
+    {% 
+        include '/includes/paginator.html.twig' with
+            {
+                'route': 'user_list',
+                'entidades': 'users'
+            } 
+    %}
+	
+	{# incluye la subvista con los la lista de usuarios #}
+	{% include '/includes/lista_users.html.twig' %}
+            
+	{# incluye la subvista en los enlaces de paginación después de la tabla #}
+    {% 
+        include '/includes/paginator.html.twig' with
+            {
+                'route': 'user_list',
+                'entidades': 'users'
+            } 
+    %}
+{% endblock %}

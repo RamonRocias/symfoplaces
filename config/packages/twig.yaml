@@ -9,6 +9,7 @@ twig:
         '%kernel.project_dir%/public/images' : images
         
     # integra bootstra_5 para los formularios
+    # form_themes: ['bootstrap_5_layout.html.twig']
     form_themes: ['bootstrap_5_layout.html.twig', 'widgets/data_list.html.twig']
     
     # variables globales

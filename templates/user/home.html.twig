@@ -1,0 +1,65 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Página de usuario {{ app.user.displayname }}{% endblock %}
+
+{% block main %}
+	{{ parent() }}
+        <style>
+            .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+            .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+        </style>
+        <h2>Home de {{ app.user.displayname }}</h2>
+        <p>Esta e tu información de usuario</p>
+        {% if not app.user.isVerified %}
+        	<div class="row alert alet-danger p-2" role="alert">
+        		<p> La dirección de e-mail {{ app.user.email }} <b>no ha sido verificada</b>.
+        		Por favor haz click
+        			en <a href="{{  path('resend_verification') }}">verificar usuario</a>
+        			para completar el proceso de registro y poder acceder a todas las
+        			funcionalidades de Symfoplaces.</p>
+        	</div>
+        {% endif %}
+        <div class="bg-light border row align-items-center justify-content-center my-3">
+			<div class="col m-3 p-3 text-start">				
+                <div class="my-2 p-2">
+                    <h3>Datos</h3>
+                    <p><b>#</b>: {{ app.user.id }}</p>
+                    <p><b>Alias</b>: {{ app.user.displayname }}</p>
+                    <p><b>Nombre</b>: {{ app.user.name }}</p>
+                    <p><b>Email</b>: {{ app.user.email }}</p>
+                    <p><b>Teléfono</b>: {{ app.user.phone ?? 'Sin especificar' }}</p>
+                    <p><b>Ciudad</b>: {{ app.user.city ?? 'Sin especificar' }}</p>
+                    <p><b>País</b>: {{ app.user.country ?? 'Sin especificar' }}</p>
+                    <p><b>Continente</b>: {{ app.user.continent ?? 'Sin especificar' }}</p>
+                    <p><b>Fecha de nacimiento</b>: {{ app.user.nacimiento ?? 'Sin especificar' }}</p>
+                    {% if app.user.getPlaces()|length>0 %}
+                        <h3>Lugares añadidos por el usuario</h3>
+                        {% set places = app.user.getPlaces() %}
+                        <p> Este usuario ha añadido {{ places|length }} lugares a Symfoplaces.</p>
+                        {# A continuación se añade la subvista con la lista de lugares #}
+                        {%  include '/includes/lista_places.html.twig' %}
+		            {% endif %}
+                </div>
+                <div class="my-2 p-2">
+					<h3>Operaciones</h3>
+                    <ul> {% if not app.user.isVerified %}
+                    	<li><a href="{{  path('resend_verification') }}">Verificar usuario</a>.</li>  {# RegistrationController #}
+                    	{% endif %}
+                    	<li><a href="{{ path('user_update',{'id':app.user.id}) }}">Actualizar datos</a>.</li> {# UserController #}
+                    	<li><a href="{{ path('app_unsubscribe') }}">Baja de usuario</a>.</li> {# RegistrationController #}
+                    </ul>
+                </div>
+            </div>
+            <div class="col m-3 p-3 text-center bg-light">
+                <img class="rounded border movie-cover" style="max-width: 240px"
+                	alt="Foto de {{ app.user.displayname }}"
+                	title="Foto de {{ app.user.displayname }}"
+                	src="{{ app.user. fotografia?
+                        path('pic_show', {'fotografia':app.user.fotografia}) 
+                            :
+                        path('pic_show', {'fotografia':'default.jpg'})
+            	    }}">
+            </div>
+        </div>
+
+{% endblock %}

@@ -1,0 +1,21 @@
+{% block data_list_widget %}
+
+{% set idlista = id|replace({'_': ''}) %}
+{% set idtexto = idlista~'texto' %}
+
+	<input type="hidden" {{ block('widget_attributes') }} value="0">
+	<input type="text" list="{{idlista}}" id="{{idtexto}}"
+		required="required" autocomplete="off">
+
+		<datalist id="{{idlista}}">
+			{% for choice in choices %}
+				<option value="{{choice.value ~' - '~ choice. label}}">
+			{% endfor %}
+		</datalist>
+		<script>
+		{{idtexto}}.onchange = function(){
+			var id = parseInt(this.value.split(' - ')[0]);
+			{{id}}.value = isNaN(id)? -1 : id;
+			}
+		</script>
+{% endblock %}

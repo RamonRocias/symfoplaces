@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Register{% endblock %}
+
+{% block main %}
+    {% for flash_error in app.flashes('verify_email_error') %}
+        <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+    {% endfor %}
+    <div class="bg-light border row align-items-center justify-content-center my-3 p-2">
+    	<div class="row">
+    		<div class="col-8">
+        		<h3 class="my-2">Registro de usuario</h3>    		
+                {{ form_start(registrationForm) }}
+                {{ form_row(registrationForm.email) }}
+                {{ form_row(registrationForm.displayname, {label: 'Nombre'}) }}
+                {{ form_row(registrationForm.plainPassword, {label: 'Password'}) }}
+                {{ form_row(registrationForm.telefono, {label: 'Teléfono'}) }}
+                <div class="row">
+                    <div class="col">
+                    	{{ form_row(registrationForm.poblacion, {label: 'Población'}) }}
+                    	{{ form_row(registrationForm.cp, {label: 'Código postal'}) }}
+                	</div>
+                	<div class="col">                	
+                    	{{ form_row(registrationForm.country, {label: 'País'}) }}
+                	</div>
+            	</div>               	
+            	{{ form_row(registrationForm.fotografia, {label: 'Fotografía'}) }}
+            	<div class="col-4 text-center">
+                	<h4 class="my-2">Previsualización</h4>
+                	<figure class="my-2 p-2">
+                		<img id="preview"
+                			class="rounded border movie-cover”
+                			style="max-width: 40px;"
+                			src="{{ asset('/images/portraits/default.jpg') }}">
+                		<figcaption class="my-3 text-center">
+                			Imagen de usuario
+                		</figcaption>
+                	</figure>
+                
+                	<script src="{{ asset('/js/preview.js') }}"></script>	<!-- previewCreateUser.js -->
+                </div>
+        	</div>
+    	</div>
+			<h3 class="mt-3">Términos y condiciones</h3> 
+			<p>Este es un ejemplo de clase y los datos que introduzcas aquí no 
+			serán tratados con ningún tipo de fin comercial. Las únicas notificaciones
+			 que recibirás al e-mail son las de veríficar tu e-mail y en el caso de que
+			 olvides el password.</p>
+			 
+			 <div class="text-center">
+			 	{{ form_row(registrationForm.agreeTerms, {
+			 	    label: 'acepto los términos'
+			 	}) }}
+			 	{{ form_rest(registrationForm) }}
+			 	 <button type="submit" class="btn btn-primary">Registro</button>
+			 </div>
+		 {{ form_end(registrationForm) }}
+	</div>
+        		
+        		<script src="{{ asset('/js/preview.js') }}"></script>
+{% endblock %}

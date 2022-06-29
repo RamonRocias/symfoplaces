@@ -20,6 +20,7 @@ parameters:
     
     # directorio para la subida de fotos de usuario (relativa y absoluta)
     app.users_pics: '/resources/images/users'
+    # app.users_pics: 'APP_USERS_PICS'
     app.users_pics_root: '%kernel.project_dir%/%app.users_pics%'
     # número de resultados por página para la paginación
     app.page_results: 10
