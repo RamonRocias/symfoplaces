@@ -23,7 +23,7 @@ class PhotoFormType extends AbstractType
         ->add('description', TextareaType::class)
         ->add('date', DateType::class,['widget'=>'single_text'])
         ->add('picture', FileType::class, [
-            'label' => 'Retrato del actor (jpg, png o gif):',
+            'label' => 'Archivo de imagen (jpg, png o gif):',
             'attr' => ['class'=>'file-with-preview'],
             'required'=>false,
             'data_class' =>NULL,

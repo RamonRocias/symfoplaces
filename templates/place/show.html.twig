@@ -30,9 +30,9 @@
                     Sin valorar                
                 {% endif %}   
            </p>
-            {% if place.descripcion %}                
-                	<p><b>Descripcion:</b></p>
-                	<p>{{ place.descripcion }}</p>                
+            {% if place.description %}                
+                	<p><b>Descripcin:</b></p>
+                	<p>{{ place.description }}</p>                
             {% endif %} 
             {% if place.getUser() %}
             	<p>Información aportada por: <i>{{ place.getUser().displayname }}</i> </p>

@@ -30,7 +30,8 @@ use App\Service\PaginatorService;
 use App\Service\SimpleSearchService;
 use App\Form\SearchFormType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use App\Form\PlaceAddActorFormType;
+use App\Form\PlaceAddPhotoFormType;
+use App\Form\PlaceAddCommentFormType;
 
 use App\Entity\Photo;
 use App\Entity\Comment;
@@ -109,7 +110,7 @@ class PlaceController extends AbstractController
                 
                 // prepara un mensaje de éxito
                 
-                $mensaje = 'Place '.$place->getTitulo().' guardado correctamente con id'.$place->getId();
+                $mensaje = 'Place '.$place->getName().' guardado correctamente con id'.$place->getId();
                 $this->addFlash('success', $mensaje); // flashea el mensaje
                 $appInfoLogger->info($mensaje);	// guarda en log el mensaje
                 
@@ -240,7 +241,7 @@ class PlaceController extends AbstractController
             return $this->render("place/update.html.twig", [
                 "formulario"=>$formulario->createView(),
                 "formularioAddPhoto"=>$formularioAddPhoto->createView(),
-                "formularioAddCommnet"=>$formularioAddCommnet->createView(),
+                "formularioAddCommnet"=>$formularioAddComment->createView(),
                 "place" => $place
             ]);
     }
@@ -281,7 +282,7 @@ class PlaceController extends AbstractController
                 }
                 
                 // prepara un mensaje de éxito
-                $mensaje = 'Place '.$place->getTitulo().' borrada correctamente.';
+                $mensaje = 'Place '.$place->getName().' borrada correctamente.';
                 $this->addFlash('success', $mensaje);
                 $appInfoLogger->info($mensaje);
                 
@@ -322,7 +323,7 @@ class PlaceController extends AbstractController
                 $placeRepository->add($place,TRUE);
                 
                 // flashear el mensaje
-                $mensaje = 'Carátula de la place '.$place->getTitulo().'borrada.';
+                $mensaje = 'Carátula de la place '.$place->getName().'borrada.';
                 $this->addFlash('success', $mensaje);
             }
             // carga la vista con el formulario
@@ -352,7 +353,7 @@ class PlaceController extends AbstractController
             //tomamos el valor que llega del formulario y lo procesamos
             $formularioAddPhoto = $this->createForm(PlaceAddPhotoFormType::class);
             $formularioAddPhoto->handleRequest($request);
-            // $actor = $formularioAddPhotor->getData()['actor'];
+            // $photo = $formularioAddPhotor->getData()['photo'];
             $datos = $formularioAddPhoto->getData();   // añadidp página 67
             
             if(empty($datos['photo'])){
@@ -426,7 +427,7 @@ class PlaceController extends AbstractController
         LoggerInterface $appInfoLogger
         ){
             
-            $place->removeActore($photo); // desvincular la foto del lugar
+            $place->removePhotoe($photo); // desvincular la foto del lugar
             $em->flush(); // aplica los cambios en la BDD
             
             // flashea y loguea mensajes

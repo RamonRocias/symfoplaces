@@ -20,7 +20,7 @@ use App\Form\UserDeleteFormType;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[UniqueEntity(fields: ['email'], message: 'Ya existe una cuenta con este email')]
-#[UniqueEntity(fields: ['telefono'], message: 'Ya existe una cuenta con este teléfono')]
+#[UniqueEntity(fields: ['phone'], message: 'Ya existe una cuenta con este teléfono')]
 
 // Estas líneas son para que compruebe que el email es único en los registros
 class User implements UserInterface, PasswordAuthenticatedUserInterface

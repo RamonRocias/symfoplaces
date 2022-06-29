@@ -59,7 +59,7 @@ class PaginatorService{
     // podríamos tener otros métodos distintos, para aplicar otros filtros 
     public function findAllEntities(int $paginaActual = 1):Paginator{
         // preparo la consulta usando DQL, indicando la entidad mediante la
-        // propiedad entityType. Podría ser App\Entity\Pelicula, App\Entity\Actor...
+        // propiedad entityType. Podría ser App\Entity\Place, App\Entity\Photo...
         $consulta = $this->entityManager->createQuery(
             "SELECT p 
              FROM $this->entityType p

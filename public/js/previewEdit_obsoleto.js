@@ -1,9 +1,9 @@
 // cuando cargue la ventana
 
 	window.onload = function(){
-		// recupera el elemento con id "pelicula_form_caratula", este elemento es el input
+		// recupera el elemento con id "place_form_caratula", este elemento es el input
 		// de tipo file (revisad que tenga esa id con "inspeccionar" en el navegador)
-		document.getElementById("pelicula_form_caratula").onchange = function(e) {
+		document.getElementById("place_form_caratula").onchange = function(e) {
 	
 		// si el fichero no es de los tipos adecuados, no se hacen cambios
 		if(!e.target.files[0].name.match(/\. (jpe?g|png|gif)$/i)){

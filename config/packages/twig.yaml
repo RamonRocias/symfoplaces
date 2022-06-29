@@ -17,7 +17,7 @@ twig:
         # directorio de las caratulas
         covers_directory: '%app.covers%'
         # directorio de los retratos
-        # portraits_directory: '%app.portraits%'
+        portraits_directory: '%app.portraits%'
         # directorios de los retratos de los usuarios
         users_directory: '%app.users_pics%'
         

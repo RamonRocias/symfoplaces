@@ -80,7 +80,7 @@ class PlaceRepository extends ServiceEntityRepository
     public function findAllByduration(int $min, int $max):array{
         //consukta den DQL ( Doctrine Query Language)
         return $this->getEntityManager()->createQuery(
-            "select p from App\Entity\Pelicula p
+            "select p from App\Entity\Place p
                 where p.duracion between :min and :max
                 order by p.duracion desc"
             )
@@ -101,7 +101,7 @@ class PlaceRepository extends ServiceEntityRepository
             )->setMaxResults(4)  //limit
             ->setFirstResult(0) //offset
             ->getResult();
-            //$respuesta = implode('<br>', $peliculas);
+            //$respuesta = implode('<br>', $places);
             return  $places;
     }
     

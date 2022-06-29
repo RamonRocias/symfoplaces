@@ -11,7 +11,7 @@
     
 	<div class="bg-light border my-4 row align-items-center justify-content-center my-3">
 		<div class="col p-3 text-start">
-			<p><b>ID</b>: {{ actor.id }}</p>
+			<p><b>ID</b>: {{ photo.id }}</p>
     		<p><b>Título</b>: {{ photo.title }}</p>
    			<p><b>Añadida el</b>: {{ photo.date |date('d/m/Y')}} </p>
             {% if photo.description %}                    
@@ -40,7 +40,7 @@
         <img height="40" width="40" src="{{ asset('images/buttons/list.png') }}"
         alt="Lista" title="Volver al Listado"></a>
         
-        <a href="{{ path( 'photo_delete', {'id':actor.id}) }}">
+        <a href="{{ path( 'photo_delete', {'id':photo.id}) }}">
         <img height="40" width="40" src="{{ asset('images/buttons/delete.png') }}"
         alt="Borrar" title="Borrar" ></a>    
     </div>

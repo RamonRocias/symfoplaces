@@ -39,7 +39,7 @@ class UserFormType extends AbstractType
             ],
         ])
 */
-/*
+/*  La actualización del password no se hace en este formulario se hace en el formulario de ResetPassword
         ->add('plainPassword', PasswordType::class, [
             // instead of being set onto the object directly,
             // this is read and encoded in the controller
@@ -59,7 +59,9 @@ class UserFormType extends AbstractType
         ])
 */        
         ->add('displayname', TextType::class)
-        ->add('nombre', TextType::class)
+        ->add('name', TextType::class,[
+            'required' => false
+        ])
         ->add('phone', TelType::class,[
             'required' => false
         ])
@@ -74,8 +76,9 @@ class UserFormType extends AbstractType
         ->add( 'continent', TextType::class,[
             'required' => false,
         ])
-        ->add('nacimiento', DateType::class,['widget'=>'single_text'])
-        
+        ->add('nacimiento', DateType::class,['widget'=>'single_text',
+            'required' => false
+        ])
         ->add('fotografia', FileType::class,[
             'required' => false,
             'data_class' => NULL,

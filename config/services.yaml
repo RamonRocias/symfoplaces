@@ -14,6 +14,10 @@ parameters:
     app.covers: '%env(APP_COVERS)%'
     app.covers.root: '%kernel.project_dir%/public/%app.covers%'
     
+    # directorio para la subida de retratos de actors( relativa y absoluta)
+    app.portraits: '%env(APP_PORTRAITS)%'
+    app.portraits.root: '%kernel.project_dir%/public/%app.portraits%'
+    
     # directorio para la subida de imágenes de lugares ( relativa y absoluta)
     app.pictures: '%env(APP_PICTURES)%'
     app.pictures.root: '%kernel.project_dir%/public/%app.pictures%'

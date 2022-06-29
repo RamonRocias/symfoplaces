@@ -147,10 +147,10 @@ class UserController extends AbstractController
             
         // crea el formulario
         $formulario = $this->createForm(UserFormType::class, $user);
-/*            // Symfony29 añadimos código para incluir combobox con actores
-            // crea el FormType para añadir actor
+/*            // Symfony29 añadimos código para incluir combobox con photoes
+            // crea el FormType para añadir photo
             // los datos irán a al url /user/addplace/{iduser}
-            $formularioAddActor = $this->createForm(UserAddPlaceFormType::class, NULL,[
+            $formularioAddPhoto = $this->createForm(UserAddPlaceFormType::class, NULL,[
                 'action' => $this->generateUrl('user_add_place', ['id'=>$user->getId()])
             ]);
 */            

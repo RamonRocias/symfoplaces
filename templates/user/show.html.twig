@@ -31,7 +31,8 @@
                     <p><b>Ciudad</b>: {{ app.user.city ?? 'Sin especificar' }}</p>
                     <p><b>País</b>: {{ app.user.country ?? 'Sin especificar' }}</p>
                     <p><b>Continente</b>: {{ app.user.continent ?? 'Sin especificar' }}</p>
-                    <p><b>Fecha de nacimiento</b>: {{ app.user.nacimiento ?? 'Sin especificar' }}</p>
+                    <p><b>Fecha de nacimiento</b>: {{ app.user.nacimiento |date('d/m/Y')}} </p>
+                   
                     {% if app.user.getPlaces()|length>0 %}
                         <h3>Lugares añadidos por el usuario</h3>
                         {% set places = app.user.getPlaces() %}

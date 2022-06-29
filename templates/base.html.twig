@@ -43,17 +43,18 @@
         {% endblock %}
     	{% block header %}
     	<header class="row border bg-light">
-    		<hgroup class="col-8">
-    			<h1>Symfoplaces</h1>
-    			<h2>Página de lugares que es mejor no acercarse. Ejemplo de clase.</h2>
-    		</hgroup>
-    		<figure class="col-4 text-end">
+    		<figure class="col-2 text-end">
     			<a href="{{ path('app_portada') }}"> 
     			<!-- En Default controller tenemos  #[Route('/', name: 'app_portada')] 
     			para el método index(). Que nos redirige a la portada-->
-    				<img class="h-auto" alt="logo" src="{{ asset('/images/template/logo.png')}}">
+    				<img class="h-auto" alt="logo" style="width:15vw;" src="{{ asset('/images/template/logo.png')}}">
 				</a>
     		</figure>
+    		<hgroup class="col-8">
+    			<h1>Symfoplaces</h1>
+    			<h2>Página de lugares que es mejor no acercarse.</h2>
+    			<h2>Ejercicio de evaluación continua curso de Symfony.</h2>
+    		</hgroup>
     		 <p style="font-style:italic">"{{ placeQuoteService.random() }}"</p>
     	</header>
         {% endblock %}
@@ -71,7 +72,7 @@
                     </li>
                     <li class="nav-item dropdown" style="min-width:15vw">
                       <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Películas
+                        Lugares
                       </a>
                       <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <li><a class="dropdown-item" href="{{ path('place_list', ) }}">Ver lugares</a></li>

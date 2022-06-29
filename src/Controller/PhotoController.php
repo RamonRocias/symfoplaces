@@ -87,6 +87,13 @@ class PhotoController extends AbstractController
             //Crea el formulario
             $formulario=$this->createForm(PhotoFormType::class,$photo);
             
+            // Symfony29 añadimos código para incluir combobox con places
+            // crea el FormType para añadir place
+            // los datos irán a al url /place/addplace/{idplace}
+            $formularioAddPlace = $this->createForm(PhotoAddPlaceFormType::class, NULL,[
+                'action' => $this->generateUrl('photo_add_place', ['id'=>$photo->getId()])
+            ]);
+            
             // comprueba si el formulario fué enviado
             $formulario->handleRequest($request);
             
@@ -115,7 +122,11 @@ class PhotoController extends AbstractController
             }
             
             // muestra la vista con el formlario
-            return $this->renderForm('photo/new-html.twig',['formulario' => $formulario]);
+            return $this->render('photo/new-html.twig',[
+                "formulario"=>$formulario->createView(),
+                "formularioAddPlace"=>$formularioAddPlace->createView(),
+                "photo" =>$photo                
+            ]);
             
     }
     
