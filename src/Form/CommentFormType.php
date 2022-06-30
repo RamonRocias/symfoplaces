@@ -22,7 +22,7 @@ class CommentFormType extends AbstractType
         ->add('text', TextareaType::class)
         ->add('date', DateType::class,['widget'=>'single_text'])
         //    ->add('user')
-         //   ->add('place')
+        //    ->add('place')
         ->add('Guardar',SubmitType::class, ['attr'=>['class'=>'btn btn-success my-3']]);    //añadido por mi.
     }
 

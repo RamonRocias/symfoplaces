@@ -70,46 +70,52 @@ class CommentController extends AbstractController
             ["comments" =>$comments, "paginator"=>$paginator]);
     }
     
-    #[Route('/comment/create', name: 'comment_create', methods:['GET','POST'])]
+    #[Route('/comment/create/{place}', name: 'comment_create', methods:['GET','POST'])]
     
     public function create(
         Request $request,
+        Place $place,
         CommentRepository $commentRepository,
         LoggerInterface $appInfoLogger,
         FileService $fileService):Response{
             
             //Crea el objeto tipo Comment
-            $comment= new Comment();
-            
+            $comment= new Comment();            
             // comprobación de seguridad usando el voter
-            $this->denyAccessUnlessGranted('create', $comment);
-            
+            $this->denyAccessUnlessGranted('create', $comment);            
             //Crea el formulario
-            $formulario=$this->createForm(CommentFormType::class,$comment);
-            
+            $formComment=$this->createForm(CommentFormType::class,$comment);            
             // comprueba si el formulario fué enviado
-            $formulario->handleRequest($request);
-            
+            $formComment->handleRequest($request);            
             // si el formulario ha sido enviado y es vélido
-            if ($formulario->isSubmitted() && $formulario->isValid()){                
+            if ($formComment->isSubmitted() && $formComment->isValid()){                
                
-                // guarda la nueva place
                 
+                
+                
+                
+                
+                
+                
+                
+                dd($comment);
+               // guarda el nuevo comment                
                 $commentRepository->add($comment, true);
                 
-                // prepara un mensaje de éxito
-                
+                // prepara un mensaje de éxito                
                 $mensaje = 'Comentario '.$comment->getId().' guardado correctamente.';
                 $this->addFlash('success', $mensaje); // flashea el mensaje
                 $appInfoLogger->info($mensaje);	// guarda en log el mensaje
-                
+               
                 // redirige a los detalles de la place
-                return $this->redirectToRoute( 'comment_show', ['id' => $comment->getId()]);
+                return $this->redirectToRoute( 'place_show', ['place' => $place->getId()]);
             }
             
             // muestra la vista con el formlario
-            return $this->renderForm('comment/new-html.twig',['formulario' => $formulario]);
-            
+          return $this->renderForm('comment/new-html.twig',[
+                'place' => $place->getId(),
+                'formulario' => $formComment]);
+          
     }
 /*    
     #[Route('comment/search', name:'comment_search', methods:['GET','POST'])]

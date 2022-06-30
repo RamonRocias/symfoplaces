@@ -88,7 +88,8 @@ class PhotoController extends AbstractController
             // comprueba si el formulario fué enviado
             $formPhoto->handleRequest($request);            
             // si el formulario ha sido enviado y es vélido
-            if ($formPhoto->isSubmitted() && $formPhoto->isValid()){                
+            if ($formPhoto->isSubmitted() && $formPhoto->isValid()){   
+                //Gestión subida de fichero de imagen
                 if($uploadedFile = $formPhoto->get('picture')->getData()){ // Si hay fichero
                     // indica al FileService que trabaje con el directorio de pictures
                     $fileService->setTargetDirectory($this->getParameter('app.portraits.root'));
@@ -98,7 +99,7 @@ class PhotoController extends AbstractController
                 // asocio la photo al place. Método addPhoto en entidadPlace
                 $place->addPhoto($photo);                
                 }
-                // guarda la nueva place                
+                // guarda el nuevo place                
                 $photoRepository->add($photo, true);
                 
                 // prepara un mensaje de éxito                
@@ -110,7 +111,7 @@ class PhotoController extends AbstractController
                 return $this->redirectToRoute( 'place_update', ['place' => $place->getId()]);
             }
             
-            // muestra la vista con el formlario
+            // muestra la vista con el formulario
             return $this->render('photo/new-html.twig',[
                 "formulario"=>$formulario->createView(),
                 "formularioAddPlace"=>$formularioAddPlace->createView(),

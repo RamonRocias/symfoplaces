@@ -33,43 +33,45 @@
     		<div class="alert alert-danger">
     		    {{ message }}
 			</div>
-		{% endfor %}  
+		{% endfor %}
+		
+    	<ul class="list-group p-2 my-3">    	
+		
+		{% if place.getPhotos()|length>0 %}
+			<h2>Imágenes del lugar</h2>
+			{# Incluye la subvista con la lista de imágenes #}
+			{% set photos = place.getPhotos() %}
+			{% include '/includes/galeria_photos_update.html.twig' %}
+		{% else %}
+			<li class="list-group-item warning">No se han indicado imágenes.</li>
+		{% endif %}
+    		
+    	</ul> 
 		
     	<h3>Añadir fotos</h3>
-		
-		
-    	<h3>Imágenes</h3>
-    	<ul class="list-group p-2 my-3">
-    		{% for photo in place.getPhotos() %}
-    			<li class="list-group-item p-2">
-    				<a class="align-middle" href="{{  path('photo_show', {'id':photo.id}) }}">
-    					{{ photo.title }}
-    				</a>
-    				<span class="align-middle">, {{ photo.title }}.</span>
-    				<a href="{{  path('photo_delete', {'photo':photo.id}) }}">
-    					<img src="{{  asset('/images/buttons/delete.png') }}" 
-    					alt="quitar" height="25" width="25" class="m-2">  
-				    </a>
-				</li>
-			{% else %}
-				<li class="list-group-item warning">No se han indicado imágenes.</li>
-			{% endfor %}
-    	</ul>
 			{{ form_start(formPhoto) }}
             <div class="d-flex flex-row justify-content-start align-items
             border bg-light my-2">
-                <div class="px-2">
-               	    {{ form_widget(formPhoto.title) }}
+            	<div>
+                    <div class=" p-2 mt-3">
+                        {{ form_row(formPhoto.title, { 'label': 'Título de la foto' } ) }}
+               	    </div>
+                    <div class=" p-2 mt-3">               
+                   	    {{ form_row(formPhoto.date, { 'label': 'Fecha' }) }}
+               	    </div>
+                    <div class=" p-2 mt-3">               
+                   	    {{ form_widget(formPhoto.picture, { 'label': 'Archivo' }) }}
+               	    </div>
+                    <div class=" p-2 mt-3">               
+                   	    {{ form_row(formPhoto.Guardar) }}
+               	    </div>
                 </div>
-                <div class="px-2">
-               	    {{ form_widget(formPhoto.picture) }}
-                </div>
-                <div class="p-2 mt-3">
+                <div class="p-2 mt-3 col-8" >
+					{{ form_row(formPhoto.description, {'label': 'Descripción'}) }}
 					{{ form_rest(formPhoto) }}
-                </div>
-                
+                </div>                
             </div>
-            {{ form_end(formPhoto) }}        		
+            {{ form_end(formPhoto) }}      		
 			
 			<script src="{{ asset('/js/preview.js') }}"></script>
     	</div>

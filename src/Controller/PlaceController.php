@@ -35,6 +35,7 @@ use App\Form\PlaceAddCommentFormType;
 
 use App\Entity\Photo;
 use App\Entity\Comment;
+use App\Form\CommentFormType;
 
 // Sym 32
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -65,7 +66,7 @@ class PlaceController extends AbstractController
         // Le pedimos que nos recupere todas las places con paginación
         $places = $paginator->findAllEntities($pagina);
         $paginator->setLimit($this->getParameter('app.place_results'));
-        
+       
         //retorna la respuesta. Normalmente será una vista
         return $this->renderForm("place/list.html.twig",
             ["places" =>$places, "paginator"=>$paginator]);
@@ -321,11 +322,27 @@ class PlaceController extends AbstractController
             
     }
     
-    #[Route('/place/show/{id<\d+>}', name:'place_show')]
+    #[Route('/place/show/{place<\d+>}', name:'place_show')]
     
-    public function show(Place $place):Response{
+    public function show(
+        Place $place,
+        PlaceRepository $placeRepository,
+        Request $request,
+        LoggerInterface $appInfoLogger,
+        ):Response{
+        
+        // Generamos el objeto tipo Comment y el formulario para añadir comentarios
+        $comment = new Comment();
+        // creamos un formulario forPhoto que es una instancia del formulario de Photos
+        $formComment = $this->createForm(CommentFormType::class,$comment, [
+            'action' => $this->generateUrl('comment_create', ['place'=>$place->getId()])
+        ]);
+        
         //retorna la respuesta ( normalmente será una vista)
-        return $this->render("place/show.html.twig",["place" =>$place]);
+        // carga la vista con el 
+        return $this->render("place/show.html.twig",[
+            "formComment"=>$formComment->createView(), "place"=>$place]);
+       
     }
     
     #[Route('/place/addphoto/{id<\d+>}', name:'place_add_photo', methods:['POST'])]

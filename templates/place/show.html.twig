@@ -5,7 +5,7 @@
 {{ parent() }}
 
     <h2>{{ place.name }}</h2>
-    <p>Detalles del lugar {{ place.name }},
+    <p>Detalles de: {{ place.name }},
     	en {{ place.city }}({{ place.country }} - {{ place.continent }}) en <b>Symfoplaces</b>.</p>
     
     
@@ -38,22 +38,22 @@
             	<p>Información aportada por: <i>{{ place.getUser().displayname }}</i> </p>
         	{% endif %}	
 		</div>
-		<figure class="col m-3 p-3 text-center bg-light">
-			<img class="rounded movie-cover" style="max-width: 240px"
-				alt=" Carátula de {{ place.name }}"
-				title="Carátula de {{ place.name }}"
-				src="{{ asset(covers_directory~'/'~(place.caratula ?? 'default.jpg')) }}">
-		</figure>
-		
-		{% if place.getPhotos()|length>0 %}
-			<h2>Imágenes del lugarr</h2>
-			{# Incluye la subvista con la lista de imágenes #}
-			{% set photos = place.getPhotos() %}
-			{% include '/includes/galeria_photos.html.twig' %}
-		{% endif %}
+    	<figure class="col m-3 p-3 text-center bg-light">
+        	<img 
+        		alt=" Carátula de {{ place.name }}"
+        		title="Carátula de {{ place.name }}"
+        		src="{{ asset(covers_directory~'/'~(place.caratula ?? 'default.jpg')) }}">
+    	</figure>
+    	<!-- Galería de imágenes -->	
+    	{% if place.getPhotos()|length>0 %}
+    		<h2>Imágenes del lugar</h2>
+    		{# Incluye la subvista con la lista de imágenes #}
+    		{% set photos = place.getPhotos() %}
+    		{% include '/includes/galeria_photos.html.twig' %}
+    	{% endif %}
 	</div>        
    
-    
+    <!-- Iconos listar, editar y borrar lugar -->
     <div class="text-center">
     	
         <a href="{{ path( 'place_list') }}">
@@ -68,6 +68,33 @@
         <img height="40" width="40" src="{{ asset('images/buttons/delete.png') }}"
         alt="Borrar" title="Borrar" ></a>    
     </div>
+	<!-- Lista de comentarios -->
+	<ul class="list-group p-2 my-3">   	
+	
+		{% if place.getPhotos()|length>0 %}
+			<h2>Imágenes del lugar</h2>
+			{# Incluye la subvista con la lista de imágenes #}
+			{% set photos = place.getPhotos() %}
+			{% include '/includes/galeria_photos_update.html.twig' %}
+		{% else %}
+			<li class="list-group-item warning">No se han indicado imágenes.</li>
+		{% endif %}
+		
+	</ul> 
+	<!-- Formulario para añadir comentarios -->	
+	<h3>Añadir comentario</h3>
+	{{ form_start(formComment) }}
+    <div class="d-flex flex-row justify-content-start align-items
+    border bg-light my-2">    	
+        <div class="p-2 mt-3 col-8" >
+			{{ form_row(formComment.text, {'label': 'Comentario'}) }}			
+        </div>
+         <div class=" p-2 mt-3">               
+       	    {{ form_row(formComment.Guardar) }}
+   	    </div>
+   	                    
+    </div>
+    {{ form_end(formComment) }}
     
     
     
