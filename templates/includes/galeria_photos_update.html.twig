@@ -1,0 +1,20 @@
+<div style="display:flex; flex-wrap:wrap;">
+    {% for photo in photos %}
+    	<div class="text-center" style="flex:1; min-width:40vw; justify-content:left;"> 
+        	<figure style="min-width:40vw;">
+            	<p class="my-2">ID: {{ photo.id }}</p>
+                <a href="{{ path('photo_show', {'photo':photo.id}) }}">
+                    <img 
+                    alt="Retrato de {{photo.title}}"
+                    title="Retrato de {{photo.title}}"
+                    src="{{asset(portraits_directory~'/'~(photo.picture ?? 'default.jpg'))}}">
+                </a>
+        		<figcaption class="my-2"><b>{{ photo.title }} - <a href="{{  path('photo_delete', {'photo':photo.id}) }}">
+    					<img src="{{  asset('/images/buttons/delete.png') }}" 
+    					alt="quitar" height="25" width="25" class="m-2">  
+				    </a></b></figcaption>
+        		
+            </figure>
+        </div>
+    {% endfor %}
+</div>
