@@ -33,7 +33,10 @@
     		<div class="alert alert-danger">
     		    {{ message }}
 			</div>
-		{% endfor %}
+		{% endfor %}  
+		
+    	<h3>Añadir fotos</h3>
+		
 		
     	<h3>Imágenes</h3>
     	<ul class="list-group p-2 my-3">
@@ -43,8 +46,7 @@
     					{{ photo.title }}
     				</a>
     				<span class="align-middle">, {{ photo.title }}.</span>
-    				<a href="{{  path('place_remove_photo',
-    				    {'place': place.id, 'Imagen': photo.id}) }}">
+    				<a href="{{  path('photo_delete', {'photo':photo.id}) }}">
     					<img src="{{  asset('/images/buttons/delete.png') }}" 
     					alt="quitar" height="25" width="25" class="m-2">  
 				    </a>
@@ -53,21 +55,21 @@
 				<li class="list-group-item warning">No se han indicado imágenes.</li>
 			{% endfor %}
     	</ul>
-			{{ form_start(formularioAddPhoto) }}
+			{{ form_start(formPhoto) }}
             <div class="d-flex flex-row justify-content-start align-items
             border bg-light my-2">
                 <div class="px-2">
-               	    {{ form_label(formularioAddPhoto.photo) }}
+               	    {{ form_widget(formPhoto.title) }}
                 </div>
                 <div class="px-2">
-                    {{ form_widget(formularioAddPhoto.photo) }}
+               	    {{ form_widget(formPhoto.picture) }}
                 </div>
                 <div class="p-2 mt-3">
-                    {{ form_row(formularioAddPhoto.Add) }}
+					{{ form_rest(formPhoto) }}
                 </div>
-                    {{ form_rest(formularioAddPhoto) }}
+                
             </div>
-            {{ form_end(formularioAddPhoto) }}        		
+            {{ form_end(formPhoto) }}        		
 			
 			<script src="{{ asset('/js/preview.js') }}"></script>
     	</div>

@@ -46,6 +46,10 @@ class UserVoter extends Voter{
     // sujeto y usuario. Retornara true si el voter autoriza o false si no autoriza
     protected function voteOnAttribute(string $attribute,
         $usuario, TokenInterface $token): bool {
+            // Si queremos hacer pruebas y no estar condicionados a los ROLES de los usuarios
+            // podemos añadir al código return true; y nos saltamos las comprobaciones.
+            // Una vez realizadas las pruebas lo podemos comentar
+            // return true;
             
             $user = $token->getUser(); // recupera el usuario
             

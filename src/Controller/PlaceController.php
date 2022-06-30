@@ -39,6 +39,7 @@ use App\Entity\Comment;
 // Sym 32
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use App\Form\PhotoFormType;
 
 
 class PlaceController extends AbstractController
@@ -164,7 +165,7 @@ class PlaceController extends AbstractController
         ]);
     }
     
-    #[Route('/place/update/{id}', name: 'place_update', methods:['GET','POST'])]
+    #[Route('/place/update/{place}', name: 'place_update', methods:['GET','POST'])]
     
     /**
      * @IsGranted("update", subject="place")
@@ -186,23 +187,7 @@ class PlaceController extends AbstractController
             
             // crea el formulario
             $formulario = $this->createForm(PlaceFormType::class, $place);
-            
-            // Symfony29 añadimos código para incluir combobox con photos            
-            // crea el FormType para añadir photos
-            // los datos irán a al url /place/addphoto/{idplace}
-            $formularioAddPhoto = $this->createForm(PlaceAddPhotoFormType::class, NULL,[
-                'action' => $this->generateUrl('place_add_photo', ['id'=>$place->getId()])
-            ]);
-            
-            
-            // OJO AQUÍ PARA VER IS ES place_add_commment o comment_add_place.
-            // Symfony29 añadimos código para incluir comentarios
-            // crea el FormType para añadir comentarios
-            // los datos irán a al url /place/addcomment/{idplace}
-            $formularioAddComment = $this->createForm(PlaceAddCommentFormType::class, NULL,[
-                'action' => $this->generateUrl('place_add_comment', ['id'=>$place->getId()])
-            ]);
-            
+           
             //Recuperamos el nombre del fichero de la ccarátula con uniqid guardado en la BDD
             $caratulaAntigua=$place->getCaratula();
             //dd($fichero);
@@ -237,11 +222,16 @@ class PlaceController extends AbstractController
                 return $this->redirectToRoute('place_update',['id' => $place->getId()]);
             }
             
+            $photo = new Photo();
+            // creamos un formulario forPhoto que es una instancia del formulario de Photos
+            $formPhoto = $this->createForm(PhotoFormType::class,$photo, [
+                'action' => $this->generateUrl('photo_create', ['place'=>$place->getId()])
+            ]);  
+            
             // carga la vista con el formulario
-            return $this->render("place/update.html.twig", [
-                "formulario"=>$formulario->createView(),
-                "formularioAddPhoto"=>$formularioAddPhoto->createView(),
-                "formularioAddCommnet"=>$formularioAddComment->createView(),
+            return $this->renderForm("place/update.html.twig", [
+                "formulario"=>$formulario,
+                "formPhoto"=>$formPhoto,
                 "place" => $place
             ]);
     }
@@ -414,32 +404,7 @@ class PlaceController extends AbstractController
             return $this->redirectToRoute( 'place_update',['id' => $place->getId()]);
     }
     
-    #[Route('/place/removephoto/{place<\d+>}/{photo<\d+>}', name:'place_remove_photo', methods:['GET'])]
-    
-    /**
-     * @IsGranted("update", subject="place")
-     */
-    
-    public function removePhoto(
-        Place $place,
-        Photo $photo,
-        EntityManagerInterface $em,
-        LoggerInterface $appInfoLogger
-        ){
-            
-            $place->removePhotoe($photo); // desvincular la foto del lugar
-            $em->flush(); // aplica los cambios en la BDD
-            
-            // flashea y loguea mensajes
-            
-            $mensaje = 'Photo '.$photo->getTitle();
-            $mensaje .= ' eliminado de '.$place->getName().' correctamente.';
-            $this->addFlash('success', $mensaje);
-            $appInfoLogger->info($mensaje) ;
-            
-            // redirecciona de nuevo a la vista de edición de la place
-            return $this->redirectToRoute( 'place_update',['id' => $place->getId()]);
-    }
+   
     
     #[Route('/place/removecomment/{place<\d+>}/{comment<\d+>}', name:'place_remove_comment', methods:['GET'])]
     

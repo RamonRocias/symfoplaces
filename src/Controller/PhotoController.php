@@ -70,55 +70,44 @@ class PhotoController extends AbstractController
     }
     
     
-    #[Route('/photo/create', name: 'photo_create', methods:['GET','POST'])]
+    #[Route('/photo/create/{place}', name: 'photo_create', methods:['GET','POST'])]
     
     public function create(
         Request $request,
+        Place $place,
         PhotoRepository $photoRepository,
         LoggerInterface $appInfoLogger,
-        FileService $fileService):Response{
-            
+        FileService $fileService):Response{   
+        
             //Crea el objeto tipo Photo
-            $photo= new Photo();
-            
+            $photo= new Photo();            
             // comprobación de seguridad usando el voter
-            $this->denyAccessUnlessGranted('create', $photo);
-            
-            //Crea el formulario
-            $formulario=$this->createForm(PhotoFormType::class,$photo);
-            
-            // Symfony29 añadimos código para incluir combobox con places
-            // crea el FormType para añadir place
-            // los datos irán a al url /place/addplace/{idplace}
-            $formularioAddPlace = $this->createForm(PhotoAddPlaceFormType::class, NULL,[
-                'action' => $this->generateUrl('photo_add_place', ['id'=>$photo->getId()])
-            ]);
-            
+            $this->denyAccessUnlessGranted('create', $photo);            
+            //Crea el formulario            
+            $formPhoto = $this->createForm(PhotoFormType::class, $photo);            
             // comprueba si el formulario fué enviado
-            $formulario->handleRequest($request);
-            
+            $formPhoto->handleRequest($request);            
             // si el formulario ha sido enviado y es vélido
-            if ($formulario->isSubmitted() && $formulario->isValid()){
-                
-                if($uploadedFile = $formulario->get('picture')->getData()){ // Si hay fichero
+            if ($formPhoto->isSubmitted() && $formPhoto->isValid()){                
+                if($uploadedFile = $formPhoto->get('picture')->getData()){ // Si hay fichero
                     // indica al FileService que trabaje con el directorio de pictures
                     $fileService->setTargetDirectory($this->getParameter('app.portraits.root'));
                     
                     // sube el fichero al directorio y guarda su nombre en la entidad
                     $photo->setPicture($fileService->upload($uploadedFile, true, 'picture_place_'));
+                // asocio la photo al place. Método addPhoto en entidadPlace
+                $place->addPhoto($photo);                
                 }
-                // guarda la nueva place
-                
+                // guarda la nueva place                
                 $photoRepository->add($photo, true);
                 
-                // prepara un mensaje de éxito
-                
+                // prepara un mensaje de éxito                
                 $mensaje = 'Imagen '.$photo->getTitle().' guardado correctamente.';
                 $this->addFlash('success', $mensaje); // flashea el mensaje
                 $appInfoLogger->info($mensaje);	// guarda en log el mensaje
                 
                 // redirige a los detalles de el place
-                return $this->redirectToRoute( 'photo_show', ['id' => $photo->getId()]);
+                return $this->redirectToRoute( 'place_update', ['place' => $place->getId()]);
             }
             
             // muestra la vista con el formlario
@@ -126,8 +115,7 @@ class PhotoController extends AbstractController
                 "formulario"=>$formulario->createView(),
                 "formularioAddPlace"=>$formularioAddPlace->createView(),
                 "photo" =>$photo                
-            ]);
-            
+            ]);            
     }
     
     #[Route('photo/search', name:'photo_search', methods:['GET','POST'])]
@@ -165,91 +153,8 @@ class PhotoController extends AbstractController
         ]);
     }
     
-    
-    
-    
-    
-    
-    
-/*    
-    #[Route('/photo/update/{id}', name:'photo_update', methods:['GET','POST'])]
-*/    
-    /**
-     * @IsGranted("update", subject="photo")
-     */
- /*   
-    public function update(
-        Photo $photo,
-        PhotoRepository $photoRepository,
-        Request $request,
-        LoggerInterface $appInfoLogger,
-        FileService $fileService,
-        Filesystem $fileSystem
-        ):Response{
-            //dd($photo);
-            
-            // comprobación de seguridad usando el voter
-            // la quitamos para probar la anotación Sym 32
-            // $this->denyAccessUnlessGranted('update', $photo);
-            
-            // crea el formulario
-            $formulario = $this->createForm(PhotoFormType::class, $photo);
-            // Symfony29 añadimos código para incluir combobox con places
-            // crea el FormType para añadir photo
-            // los datos irán a al url /place/addphoto/{idplace}
-            $formularioAddPlace = $this->createForm(PhotoAddPlaceFormType::class, NULL,[
-                'action' => $this->generateUrl('photo_add_place', ['id'=>$photo->getId()])
-            ]);
-            
-            //Recuperamos el nombre del fichero de la ccarátula con uniqid guardado en la BDD
-            $pictureAntiguo=$photo->getPicture();
-            //dd($fichero);
-            // comprueba si el formulario fué enviado y rellena los datos
-            // del photo con los datos que vienen del request
-            $formulario->handleRequest($request);
-            
-            // si el formulario fue enviado y es valido...
-            if ($formulario->isSubmitted() && $formulario->isValid()) {
-                
-                //Si llega un nuevo picture
-                if ($uploadedFile = $formulario->get('picture')->getData()) {
-                    // Subida de fichero con servicio SYM 16
-                    
-                    // indica al FileService que trabaje con el directorio de pictures
-                    $fileService->setTargetDirectory($this->getParameter('app.portraits.root'));
-                    
-                    // remplaza el fichero y guarda el nuevo nombre en la entidad
-                    $photo->setPicture($fileService->replace($uploadedFile, $pictureAntiguo, TRUE, 'portrait__'));
-                    
-                    // si no llega el nuevo picture, seguiremos usando el viejo.
-                }else{
-                    $photo->setPicture($pictureAntiguo);
-                }
-                
-                // aplica las modificaciones de los photoes en la BDD
-                $photoRepository->add($photo,TRUE);
-                
-                // prepara el mensaje de éxito
-                $this->addFlash('success', 'Datos del photo actualizados correctamente.');
-                // redirige a "ver detalles de la peli"
-                return $this->redirectToRoute('photo_update',['id' => $photo->getId()]);
-            }
-            
-            // carga la vista con el formulario
-            return $this->render("photo/update.html.twig",
-                ["formulario"=>$formulario->createView(),
-                    "formularioAddPlace"=>$formularioAddPlace->createView(),
-                    "photo" => $photo
-                ]);
-    }
-*/    
-    
-    #[Route('/photo/delete/{id}', name: 'photo_delete', methods:['GET','POST'])]
+    #[Route('/photo/delete/{photo}', name: 'photo_delete', methods:['GET','POST'])]
     //Usando la clase del formulario
-    
-    /**
-     * @IsGranted("delete", subject="photo")
-     */
     
     public function delete(
         Photo $photo,
@@ -257,11 +162,10 @@ class PhotoController extends AbstractController
         Request $request,
         LoggerInterface $appInfoLogger,
         FileService $fileService
-        ): Response{
-            
-            // comprobación de seguridad usando el voter
-            // la quitamos para probar la anotación Sym 32
-            // $this->denyAccessUnlessGranted('delete', $photo);
+        ): Response{            
+                        
+            $place = $photo->getPlace();
+            $this->denyAccessUnlessGranted('update', $place);
             
             // creación del formulario
             $formulario = $this->createForm(PhotoDeleteFormType::class, $photo);
@@ -285,7 +189,7 @@ class PhotoController extends AbstractController
                 $appInfoLogger->info($mensaje);
                 
                 // redirige a la lista de places
-                return $this->redirectToRoute('photo_list');
+                return $this->redirectToRoute('place_update', ['place' => $place->getId()]);
             }
             // muestra la vista con el formulario de borrado
             return $this->renderForm('photo/delete.html.twig',
@@ -329,9 +233,10 @@ class PhotoController extends AbstractController
             
     }
     
-    #[Route('/photo/show/{id<\d+>}', name:'photo_show')]
+    #[Route('/photo/show/{photo<\d+>}', name:'photo_show')]
     
     public function show(Photo $photo):response{
+        
         //retorna la respuesta ( normalmente será una vista)
         return $this->render("photo/show.html.twig",["photo" =>$photo]);
     }

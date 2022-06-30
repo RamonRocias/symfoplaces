@@ -44,7 +44,7 @@
                     	 <img height="20" width="20" src="{{ asset('images/buttons/show.png') }}" alt="Ver detalles" title="Ver detalles">
                     </a>
                     {%  if is_granted('update',place) %}
-                    <a href="{{ path('place_update', {'id':place.id}) }}">
+                    <a href="{{ path('place_update', {'place':place.id}) }}">
                     	<img height="20" width="20" src="{{ asset('/images/buttons/update.png') }}" title="Modificar" alt="Modificar">
                 	</a> 
                 	{% endif %}

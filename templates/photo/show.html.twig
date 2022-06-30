@@ -6,7 +6,7 @@
 
     <h2>{{ photo.title }}</h2>
     <p>Detalles de la imágen {{ photo.title }},
-    	añadida el {{ photo.date }} a <b>Symfoplaces</b>.</p>
+    	añadida el {{ photo.date |date('d/m/Y') }} a <b>Symfoplaces</b>.</p>
     
     
 	<div class="bg-light border my-4 row align-items-center justify-content-center my-3">
@@ -26,21 +26,16 @@
 				src="{{ asset(portraits_directory~'/'~(photo.picture ?? 'default.jpg')) }}">
 		</figure>
 		
-		{% if photo.getPlace()|length>0 %}
-			<h2>Esta imagen pertenece a:</h2>
-			{# Incluye la subvista con la lista de lugares #}
-			{% set place = photo.getPlace() %}
-			{% include '/includes/galeria_places.html.twig' %}
-		{% endif %}
+
 	</div>       
    
 
     <div class="text-center">
-        <a href="{{ path( 'photo_list') }}">
-        <img height="40" width="40" src="{{ asset('images/buttons/list.png') }}"
+        <a href="{{ path( 'place_show', {'id':photo.getPlace().getId()}) }}">
+        <img height="40" width="40" src="{{ asset('images/buttons/retorno.png') }}"
         alt="Lista" title="Volver al Listado"></a>
         
-        <a href="{{ path( 'photo_delete', {'id':photo.id}) }}">
+        <a href="{{ path( 'photo_delete', {'photo':photo.id}) }}">
         <img height="40" width="40" src="{{ asset('images/buttons/delete.png') }}"
         alt="Borrar" title="Borrar" ></a>    
     </div>
