@@ -35,12 +35,10 @@ use App\Form\PlaceAddCommentFormType;
 
 use App\Entity\Photo;
 use App\Entity\Comment;
-use App\Form\CommentFormType;
 
 // Sym 32
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use App\Form\PhotoFormType;
 
 
 class PlaceController extends AbstractController
@@ -66,7 +64,7 @@ class PlaceController extends AbstractController
         // Le pedimos que nos recupere todas las places con paginación
         $places = $paginator->findAllEntities($pagina);
         $paginator->setLimit($this->getParameter('app.place_results'));
-       
+        
         //retorna la respuesta. Normalmente será una vista
         return $this->renderForm("place/list.html.twig",
             ["places" =>$places, "paginator"=>$paginator]);
@@ -117,7 +115,7 @@ class PlaceController extends AbstractController
                 $appInfoLogger->info($mensaje);	// guarda en log el mensaje
                 
                 // redirige a los detalles del place
-                return $this->redirectToRoute( 'place_show', ['place' => $place->getId()]);
+                return $this->redirectToRoute( 'place_show', ['id' => $place->getId()]);
             }
             
             // muestra la vista con el formlario
@@ -166,7 +164,7 @@ class PlaceController extends AbstractController
         ]);
     }
     
-    #[Route('/place/update/{place}', name: 'place_update', methods:['GET','POST'])]
+    #[Route('/place/update/{id}', name: 'place_update', methods:['GET','POST'])]
     
     /**
      * @IsGranted("update", subject="place")
@@ -188,7 +186,23 @@ class PlaceController extends AbstractController
             
             // crea el formulario
             $formulario = $this->createForm(PlaceFormType::class, $place);
-           
+            
+            // Symfony29 añadimos código para incluir combobox con photos            
+            // crea el FormType para añadir photos
+            // los datos irán a al url /place/addphoto/{idplace}
+            $formularioAddPhoto = $this->createForm(PlaceAddPhotoFormType::class, NULL,[
+                'action' => $this->generateUrl('place_add_photo', ['id'=>$place->getId()])
+            ]);
+            
+            
+            // OJO AQUÍ PARA VER IS ES place_add_commment o comment_add_place.
+            // Symfony29 añadimos código para incluir comentarios
+            // crea el FormType para añadir comentarios
+            // los datos irán a al url /place/addcomment/{idplace}
+            $formularioAddComment = $this->createForm(PlaceAddCommentFormType::class, NULL,[
+                'action' => $this->generateUrl('place_add_comment', ['id'=>$place->getId()])
+            ]);
+            
             //Recuperamos el nombre del fichero de la ccarátula con uniqid guardado en la BDD
             $caratulaAntigua=$place->getCaratula();
             //dd($fichero);
@@ -220,19 +234,14 @@ class PlaceController extends AbstractController
                 // prepara el mensaje de éxito
                 $this->addFlash('success', 'Datos de la place actualizados correctamente.');
                 // redirige a "ver detalles de la place"
-                return $this->redirectToRoute('place_update',['place' => $place->getId()]);
+                return $this->redirectToRoute('place_update',['id' => $place->getId()]);
             }
             
-            $photo = new Photo();
-            // creamos un formulario forPhoto que es una instancia del formulario de Photos
-            $formPhoto = $this->createForm(PhotoFormType::class,$photo, [
-                'action' => $this->generateUrl('photo_create', ['place'=>$place->getId()])
-            ]);  
-            
             // carga la vista con el formulario
-            return $this->renderForm("place/update.html.twig", [
-                "formulario"=>$formulario,
-                "formPhoto"=>$formPhoto,
+            return $this->render("place/update.html.twig", [
+                "formulario"=>$formulario->createView(),
+                "formularioAddPhoto"=>$formularioAddPhoto->createView(),
+                "formularioAddCommnet"=>$formularioAddComment->createView(),
                 "place" => $place
             ]);
     }
@@ -266,21 +275,11 @@ class PlaceController extends AbstractController
                 // Elimina la places vinculada al formulario
                 $placeRepository->remove($place,TRUE);
                 
-                // Para cada foto de ese lugar borra el archivo
-                foreach($place->getPhotos() as $photo)
-                    $fileService->setTargetDirectory($this->getParameter('app.portraits.root'))->remove($photo->getPicture());
-                
                 // Si había carátula, hay que borrar el fichero del sistema de ficheros
                 if($caratula = $place->getCaratula()){ // si hay caratula
                     
                     $fileService->setTargetDirectory($this->getParameter('app.covers.root'))->remove($caratula);
-                
-                
-                
-                
                 }
-                
-                
                 
                 // prepara un mensaje de éxito
                 $mensaje = 'Place '.$place->getName().' borrada correctamente.';
@@ -332,29 +331,11 @@ class PlaceController extends AbstractController
             
     }
     
-    #[Route('/place/show/{place<\d+>}', name:'place_show')]
+    #[Route('/place/show/{id<\d+>}', name:'place_show')]
     
-    public function show(
-        Place $place,
-        PlaceRepository $placeRepository,
-        Request $request,
-        LoggerInterface $appInfoLogger,
-        ):Response{
-        
-        // Generamos el objeto tipo Comment y el formulario para añadir comentarios
-        $comment = new Comment();
-        // creamos un formulario forPhoto que es una instancia del formulario de Photos
-        $formComment = $this->createForm(CommentFormType::class,$comment, [
-            'action' => $this->generateUrl('comment_create', ['place'=>$place->getId()])
-        ]);
-        
-
-        
-        // carga la vista con el formulario
-        return $this->renderForm("place/show.html.twig", [
-            "formComment"=>$formComment,
-            "place" => $place]);
-       
+    public function show(Place $place):Response{
+        //retorna la respuesta ( normalmente será una vista)
+        return $this->render("place/show.html.twig",["place" =>$place]);
     }
     
     #[Route('/place/addphoto/{id<\d+>}', name:'place_add_photo', methods:['POST'])]
@@ -433,7 +414,32 @@ class PlaceController extends AbstractController
             return $this->redirectToRoute( 'place_update',['id' => $place->getId()]);
     }
     
-   
+    #[Route('/place/removephoto/{place<\d+>}/{photo<\d+>}', name:'place_remove_photo', methods:['GET'])]
+    
+    /**
+     * @IsGranted("update", subject="place")
+     */
+    
+    public function removePhoto(
+        Place $place,
+        Photo $photo,
+        EntityManagerInterface $em,
+        LoggerInterface $appInfoLogger
+        ){
+            
+            $place->removePhotoe($photo); // desvincular la foto del lugar
+            $em->flush(); // aplica los cambios en la BDD
+            
+            // flashea y loguea mensajes
+            
+            $mensaje = 'Photo '.$photo->getTitle();
+            $mensaje .= ' eliminado de '.$place->getName().' correctamente.';
+            $this->addFlash('success', $mensaje);
+            $appInfoLogger->info($mensaje) ;
+            
+            // redirecciona de nuevo a la vista de edición de la place
+            return $this->redirectToRoute( 'place_update',['id' => $place->getId()]);
+    }
     
     #[Route('/place/removecomment/{place<\d+>}/{comment<\d+>}', name:'place_remove_comment', methods:['GET'])]
     

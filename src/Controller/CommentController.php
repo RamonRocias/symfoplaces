@@ -91,14 +91,9 @@ class CommentController extends AbstractController
             if ($formComment->isSubmitted() && $formComment->isValid()){                
                
                 
-                
-                
-                
-                
-                
-                
-                
-                dd($comment);
+               $comment->setUser($this->getUser()) ;
+               $comment->setPlace($place);
+               
                // guarda el nuevo comment                
                 $commentRepository->add($comment, true);
                 
@@ -117,122 +112,7 @@ class CommentController extends AbstractController
                 'formulario' => $formComment]);
           
     }
-/*    
-    #[Route('comment/search', name:'comment_search', methods:['GET','POST'])]
-    
-    public function search(Request $request, SimpleSearchService $busqueda):Response{
-        
-        // crea el formulario
-        $formulario = $this->createForm(SearchFormType::class, $busqueda, [
-            'field_choices' => [
-                'ID' => 'id',
-                'Nombre' => 'nombre',
-                'Nacionalidad' => 'nacionalidad'
-            ],
-            'order_choices' =>[
-                'ID' => 'id',
-                'Nombre' => 'nombre',
-                'Nacionalidad' => 'nacionalidad'
-            ]
-        ]);
-        
-        // establece el valor selected para los SELECT
-        $formulario->get('campo')->setData($busqueda->campo);
-        $formulario->get('orden')->setData($busqueda->orden);
-        
-        // gestiona el formulario y recupera los valores de busqueda
-        $formulario->handleRequest($request);
-        
-        // realiza La busqueda
-        $comments = $busqueda->search( 'App\Entity\Comment');
-        
-        // retorna la vista con los resultados
-        return $this->renderForm("comment/buscar.html.twig", [
-            "formulario"=>$formulario,
-            "comments" => $comments
-        ]);
-       
-    }
-*/     
-    
-    
-    
-    
-    
-    
-   
-//    #[Route('/comment/update/{id}', name:'comment_update', methods:['GET','POST'])]
-    
-    /*
-     * @IsGranted("update", subject="comment")
-     */
-    
-/*    public function update(
-        Comment $comment,
-        CommentRepository $commentRepository,
-        Request $request,
-        LoggerInterface $appInfoLogger,
-        FileService $fileService,
-        Filesystem $fileSystem
-        ):Response{
-            //dd($comment);
-            
-            // comprobación de seguridad usando el voter
-            // la quitamos para probar la anotación Sym 32
-            // $this->denyAccessUnlessGranted('update', $comment);
-            
-            // crea el formulario
-            $formulario = $this->createForm(CommentFormType::class, $comment);
-            // Symfony29 añadimos código para incluir combobox con lugars
-            // crea el FormType para añadir comment
-            // los datos irán a al url /place/addcomment/{idplace}
-            $formularioAddPlace = $this->createForm(CommentAddPlaceFormType::class, NULL,[
-                'action' => $this->generateUrl('comment_add_place', ['id'=>$comment->getId()])
-            ]);
-            
-            //Recuperamos el nombre del fichero de la ccarátula con uniqid guardado en la BDD
-            $retratoAntiguo=$comment->getRetrato();
-            //dd($fichero);
-            // comprueba si el formulario fué enviado y rellena los datos
-            // del comment con los datos que vienen del request
-            $formulario->handleRequest($request);
-            
-            // si el formulario fue enviado y es valido...
-            if ($formulario->isSubmitted() && $formulario->isValid()) {
-                
-                //Si llega un nuevo retrato
-                if ($uploadedFile = $formulario->get('retrato')->getData()) {
-                    // Subida de fichero con servicio SYM 16
-                    
-                    // indica al FileService que trabaje con el directorio de retratos
-                    $fileService->setTargetDirectory($this->getParameter('app.portraits.root'));
-                    
-                    // remplaza el fichero y guarda el nuevo nombre en la entidad
-                    $comment->setRetrato($fileService->replace($uploadedFile, $retratoAntiguo, TRUE, 'portrait__'));
-                    
-                    // si no llega el nuevo retrato, seguiremos usando el viejo.
-                }else{
-                    $comment->setRetrato($retratoAntiguo);
-                }
-                
-                // aplica las modificaciones de los commentes en la BDD
-                $commentRepository->add($comment,TRUE);
-                
-                // prepara el mensaje de éxito
-                $this->addFlash('success', 'Datos del comment actualizados correctamente.');
-                // redirige a "ver detalles de la peli"
-                return $this->redirectToRoute('comment_update',['id' => $comment->getId()]);
-            }
-            
-            // carga la vista con el formulario
-            return $this->render("comment/update.html.twig",
-                ["formulario"=>$formulario->createView(),
-                    "formularioAddPlace"=>$formularioAddPlace->createView(),
-                    "comment" => $comment
-                ]);
-    }
-*/    
-    
+
     #[Route('/comment/delete/{id}', name: 'comment_delete', methods:['GET','POST'])]
     //Usando la clase del formulario
     
@@ -267,51 +147,18 @@ class CommentController extends AbstractController
                 $this->addFlash('success', $mensaje);
                 $appInfoLogger->info($mensaje);
                 
-                // redirige a la lista de places
-                return $this->redirectToRoute('comment_list');
+                // redirige a la lista de places cuando se borramos el comentario
+                // desde la vista comment/delete.html.twig'
+                return $this->redirectToRoute('place_show', ['place' => $comment->getPlace()->getId()]);
             }
-            // muestra la vista con el formulario de borrado
+            // muestra la vista con el formulario de borrado vacio, sin rellenar para ser rellenado
             return $this->renderForm('comment/delete.html.twig',
                 ['comment'=>$comment,
                     'formulario' =>$formulario
                 ]);
     }
     
-    // Utiliza el : use Symfony\Component\Filesystem\Filesystem;
-/*    #[Route('/comment/deleteimage/{id<\d+>}', name:'comment_delete_portrait',
-    methods:['GET'],
-    requirements:['id'=>'\d+']
-    )]
-*/    
-    /*
-     * @IsGranted("update", subject="comment")
-     */
-/*    
-    public function deletePortrait(Comment $comment,
-        Request $request,
-        CommentRepository $commentRepository,
-        FileService $fileService,
-        EntityManagerInterface $em) :Response{
-            
-            
-            if($retrato= $comment->getRetrato()){ // si hay retrato
-                
-                // la borramos del sistma de ficheros
-                $fileService->setTargetDirectory($this->getParameter('app.portraits.root'))->remove($retrato);
-                
-                // actuualizamos los datos de la place y los guradamos en BDD
-                $comment->setRetrato(NULL);
-                $commentRepository->add($comment,TRUE);
-                
-                // flashear el mensaje
-                $mensaje = 'Retrato del comment '.$comment->getNombre().'borrado.';
-                $this->addFlash('success', $mensaje);
-            }
-            // carga la vista con el formulario
-            return $this->redirectToRoute('comment_update',['id' => $comment->getId()]);
-            
-    }
-*/    
+
     #[Route('/comment/show/{id<\d+>}', name:'comment_show')]
     
     public function show(Comment $comment):response{
@@ -319,17 +166,7 @@ class CommentController extends AbstractController
         return $this->render("comment/show.html.twig",["comment" =>$comment]);
     }
     
-    /*
-     #[Route('/place/duracion/{min<\d*>}/{max<\d*>}', name:'place_duracion', defaults:[['min'=>0],['max'=>9999999]])]
-     public function duracion(int $min, int $max){
-     
-     $repositorio = $this->getDoctrine()->getRepository(Place::class);
-     $pelis = $repositorio->findAllByDuration($min, $max) ;
-     
-     // carga la vista de listado de places, pasándole toda la información
-     return $this->renderForm("place/list.html.twig", ['places' =>$pelis ]);
-     }
-     */
+
     #[Route('/comment/addPlace/{id<\d+>}', name:'comment_add_place', methods:['POST'])]
     
     /**

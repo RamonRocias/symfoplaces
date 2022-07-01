@@ -9,11 +9,11 @@
     
 	<div class="bg-light border my-4 row align-items-center justify-content-center my-3">		
 		
-		{% if comment.getPlace()|length>0 %}
+		{% if comment.getComment()|length>0 %}
 			<h2>Este comentario pertenece a:</h2>
 			{# Incluye la subvista con la lista de lugares #}
-			{% set place = photo.getPlace() %}
-			{% include '/includes/galeria_places.html.twig' %}
+			{% set comment = comment.getId() %}
+			{% include '/includes/lista_comments.html.twig' %}
 		{% endif %}
 	</div>       
    

@@ -44,13 +44,6 @@
         		title="Carátula de {{ place.name }}"
         		src="{{ asset(covers_directory~'/'~(place.caratula ?? 'default.jpg')) }}">
     	</figure>
-    	<!-- Galería de imágenes -->	
-    	{% if place.getPhotos()|length>0 %}
-    		<h2>Imágenes del lugar</h2>
-    		{# Incluye la subvista con la lista de imágenes #}
-    		{% set photos = place.getPhotos() %}
-    		{% include '/includes/galeria_photos.html.twig' %}
-    	{% endif %}
 	</div>        
    
     <!-- Iconos listar, editar y borrar lugar -->
@@ -68,18 +61,27 @@
         <img height="40" width="40" src="{{ asset('images/buttons/delete.png') }}"
         alt="Borrar" title="Borrar" ></a>    
     </div>
+    
+	<!-- Galería de imágenes -->
+	<ul class="list-group p-2 my-3"> 	
+    	{% if place.getPhotos()|length>0 %}
+    		<h2>Imágenes del lugar</h2>
+    		{# Incluye la subvista con la lista de imágenes #}
+    		{% set photos = place.getPhotos() %}
+    		{% include '/includes/galeria_photos.html.twig' %}
+    	{% endif %}		
+	</ul>
+	 
 	<!-- Lista de comentarios -->
-	<ul class="list-group p-2 my-3">   	
-	
-		{% if place.getPhotos()|length>0 %}
-			<h2>Imágenes del lugar</h2>
-			{# Incluye la subvista con la lista de imágenes #}
-			{% set photos = place.getPhotos() %}
-			{% include '/includes/galeria_photos_update.html.twig' %}
+		<h2>Comentarios</h2>
+	<ul class="list-group p-2 my-3"> 
+		{% if place.getComments()|length>0 %}
+			{# Incluye la subvista con la lista de comentarios #}
+			{% set comments = place.getComments() %}
+			{% include '/includes/lista_comments.html.twig' %}
 		{% else %}
-			<li class="list-group-item warning">No se han indicado imágenes.</li>
-		{% endif %}
-		
+			<li class="list-group-item warning">No se han indicado comentarios.</li>
+		{% endif %}		
 	</ul> 
 	<!-- Formulario para añadir comentarios -->	
 	<h3>Añadir comentario</h3>

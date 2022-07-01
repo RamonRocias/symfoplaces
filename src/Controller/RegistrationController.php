@@ -207,7 +207,11 @@ class RegistrationController extends AbstractController
                 
                 // pone a NULL el user_id de las películas relacionadas
                 foreach($usuario->getPlaces() as $place)
-                $usuario->removePlace($place);      
+                    $usuario->removePlace($place);
+                
+                // pone a NULL el user_id de las películas relacionadas
+                foreach($usuario->getComments() as $comment)
+                        $usuario->removeComment($comment);    
                 
                 // modifica el directorio de destino para los ficheros
                 $fileService->setTargetDirectory($this->getParameter('app.users_pics_root'));

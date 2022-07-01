@@ -11,14 +11,14 @@
    	<div class="container d-flex my-5">
    		{% for place in places %}
    		<figure class="col m-2 text-center">
-   			<a href="{{ path('place_show',{'id':place.id})}}">
+   			<a href="{{ path('place_show',{'place':place.id})}}">
    				<img 
    				class="rounded img-fluid w-90 h-100 d-inline-block"
    				alt="Portada de {{ place.name }}"
    				src="{{ asset(covers_directory~'/'~place.caratula) }}">
    			</a>
    			<figcaption class="text-center small my-2">
-   				<a href="{{ path('place_show',{'id':place.id}) }}">
+   				<a href="{{ path('place_show',{'place':place.id}) }}">
    					{{ place.name }} ({{ place.city }} - {{ place.continent }})
    				</a>   				
    			</figcaption>
